@@ -1,12 +1,96 @@
+import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { TIPI, MOCK_MARKERS } from '../data/markers'
+import { useAuth } from '../hooks/useAuth'
+
+const MAX = 150
 
 function toSlug(str) {
   return str.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
 }
 
+const MOCK_MESSAGGI = [
+  { id: 1, nome: 'Sofia M.',  testo: `Non vedo l'ora! L'anno scorso era stato fantastico, ci sarò di sicuro.`, orario: '10:23' },
+  { id: 2, nome: 'Carlos R.', testo: 'Qualcuno sa se ci sono ancora biglietti? Ho provato il sito ma non carica niente.', orario: '11:45' },
+  { id: 3, nome: 'Ana B.',    testo: `Perfetto per portare i bambini, l'anno passato erano entusiasti. Evento imperdibile!`, orario: '13:02' },
+  { id: 4, nome: 'Luca T.',   testo: 'Ci vediamo lì! Ho già avvisato il gruppo. Arriviamo verso le 19:30 per trovare posto.', orario: '15:17' },
+  { id: 5, nome: 'María J.',  testo: 'Ottimo programma, molto meglio delle edizioni precedenti. Complimenti.', orario: '16:55' },
+]
+
+function Avatar({ nome }) {
+  return (
+    <div className="w-8 h-8 rounded-full bg-coral/20 flex items-center justify-center flex-shrink-0">
+      <span className="font-syne font-bold text-xs text-coral">{nome[0]}</span>
+    </div>
+  )
+}
+
+function Conversazione({ user }) {
+  const [messaggi, setMessaggi] = useState(MOCK_MESSAGGI)
+  const [testo, setTesto] = useState('')
+
+  const rimanenti = MAX - testo.length
+
+  const handleInvia = (e) => {
+    e.preventDefault()
+    if (!testo.trim()) return
+    const nome = user.user_metadata?.nome || user.email.split('@')[0]
+    setMessaggi((prev) => [
+      ...prev,
+      { id: Date.now(), nome, testo: testo.trim(), orario: new Date().toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' }) },
+    ])
+    setTesto('')
+  }
+
+  return (
+    <div className="flex flex-col gap-6">
+      {/* Messages */}
+      <div className="flex flex-col gap-5">
+        {messaggi.map((m) => (
+          <div key={m.id} className="flex gap-3">
+            <Avatar nome={m.nome} />
+            <div className="flex-1 min-w-0">
+              <div className="flex items-baseline gap-2 mb-1">
+                <span className="font-sans text-sm font-semibold text-cream">{m.nome}</span>
+                <span className="font-sans text-xs text-cream/30">{m.orario}</span>
+              </div>
+              <p className="font-sans text-sm text-cream/70 leading-relaxed">{m.testo}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Form */}
+      <form onSubmit={handleInvia} className="border-t border-night-border pt-6">
+        <div className="relative">
+          <textarea
+            placeholder="Scrivi un messaggio... (max 150 caratteri)"
+            value={testo}
+            onChange={(e) => setTesto(e.target.value.slice(0, MAX))}
+            rows={3}
+            className="w-full bg-[#0d0d0d] border border-night-border rounded-xl px-4 py-3 font-sans text-sm text-cream placeholder:text-cream/30 focus:outline-none focus:border-coral transition-colors resize-none"
+          />
+          <span className={`absolute bottom-3 right-3 font-sans text-xs ${rimanenti <= 20 ? 'text-coral' : 'text-cream/30'}`}>
+            {rimanenti}
+          </span>
+        </div>
+        <div className="flex justify-end mt-3">
+          <button
+            type="submit"
+            disabled={!testo.trim()}
+            className="px-6 py-2 rounded-full bg-coral text-cream font-sans font-semibold text-sm hover:opacity-90 transition-opacity disabled:opacity-40"
+          >
+            Invia
+          </button>
+        </div>
+      </form>
+    </div>
+  )
+}
+
 export default function EventoPage() {
   const { id } = useParams()
+  const { user, loading } = useAuth()
   const evento = MOCK_MARKERS.find((m) => m.id === parseInt(id))
 
   if (!evento) {
@@ -80,7 +164,7 @@ export default function EventoPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-16 px-6">
+      <section className="py-16 px-6 border-b border-night-border">
         <div className="max-w-3xl mx-auto flex flex-col sm:flex-row items-start gap-4">
           <button className="px-10 py-3 rounded-full bg-coral text-cream font-sans font-semibold text-base hover:opacity-90 transition-opacity">
             Partecipa
@@ -91,6 +175,27 @@ export default function EventoPage() {
           >
             ← Torna alla mappa
           </Link>
+        </div>
+      </section>
+
+      {/* Community */}
+      <section className="py-16 px-6">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="font-syne font-bold text-2xl text-cream mb-8">Unisciti alla conversazione</h2>
+
+          {loading ? null : user ? (
+            <Conversazione user={user} />
+          ) : (
+            <div className="border border-night-border rounded-2xl p-8 text-center">
+              <p className="font-sans text-cream/50 mb-4">Accedi per partecipare alla conversazione.</p>
+              <Link
+                to="/auth"
+                className="inline-block px-8 py-2.5 rounded-full bg-coral text-cream font-sans font-semibold text-sm hover:opacity-90 transition-opacity"
+              >
+                Accedi
+              </Link>
+            </div>
+          )}
         </div>
       </section>
     </div>
