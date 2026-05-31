@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Link } from 'react-router-dom'
+import Mappa from './pages/Mappa'
 
 function SunIcon() {
   return (
@@ -40,15 +41,25 @@ function Navbar({ dark, onToggle }) {
       >
         MARRANGIÓ
       </span>
-      <button
-        onClick={onToggle}
-        className={`p-2 rounded-full transition-colors ${
-          dark ? 'text-cream/70 hover:text-gold' : 'text-dark/60 hover:text-coral'
-        }`}
-        aria-label="Cambia tema"
-      >
-        {dark ? <SunIcon /> : <MoonIcon />}
-      </button>
+      <div className="flex items-center gap-4">
+        <Link
+          to="/mappa"
+          className={`font-sans text-sm transition-colors ${
+            dark ? 'text-cream/60 hover:text-cream' : 'text-dark/60 hover:text-dark'
+          }`}
+        >
+          Mappa
+        </Link>
+        <button
+          onClick={onToggle}
+          className={`p-2 rounded-full transition-colors ${
+            dark ? 'text-cream/70 hover:text-gold' : 'text-dark/60 hover:text-coral'
+          }`}
+          aria-label="Cambia tema"
+        >
+          {dark ? <SunIcon /> : <MoonIcon />}
+        </button>
+      </div>
     </nav>
   )
 }
@@ -236,6 +247,7 @@ export default function App() {
   return (
     <Routes>
       <Route path="/" element={<HomePage dark={dark} onToggle={() => setDark(d => !d)} />} />
+      <Route path="/mappa" element={<Mappa dark={dark} onToggle={() => setDark(d => !d)} />} />
     </Routes>
   )
 }
