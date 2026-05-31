@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Routes, Route, Link } from 'react-router-dom'
 import Mappa from './pages/Mappa'
 import EventoPage from './pages/EventoPage'
+import AssociazionePage from './pages/AssociazionePage'
 
 function SunIcon() {
   return (
@@ -250,6 +251,7 @@ export default function App() {
       <Route path="/" element={<HomePage dark={dark} onToggle={() => setDark(d => !d)} />} />
       <Route path="/mappa" element={<Mappa dark={dark} onToggle={() => setDark(d => !d)} />} />
       <Route path="/eventi/:id" element={<EventoPage />} />
+      <Route path="/associazioni/:slug" element={<AssociazionePage />} />
     </Routes>
   )
 }

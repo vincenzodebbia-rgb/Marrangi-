@@ -1,6 +1,10 @@
 import { useParams, Link } from 'react-router-dom'
 import { TIPI, MOCK_MARKERS } from '../data/markers'
 
+function toSlug(str) {
+  return str.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+}
+
 export default function EventoPage() {
   const { id } = useParams()
   const evento = MOCK_MARKERS.find((m) => m.id === parseInt(id))
@@ -65,7 +69,12 @@ export default function EventoPage() {
           </div>
           <div>
             <p className="font-sans text-xs uppercase tracking-widest text-cream/30 mb-2">Organizzatore</p>
-            <p className="font-syne font-semibold text-cream">{evento.associazione}</p>
+            <Link
+              to={`/associazioni/${toSlug(evento.associazione)}`}
+              className="font-syne font-semibold text-cream hover:text-coral transition-colors"
+            >
+              {evento.associazione}
+            </Link>
           </div>
         </div>
       </section>
