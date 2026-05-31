@@ -1,79 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
-
-const TIPI = {
-  eventi:   { color: '#FF5A35', label: 'Eventi' },
-  spazi:    { color: '#2E7D52', label: 'Spazi' },
-  progetti: { color: '#FFB300', label: 'Progetti' },
-  corsi:    { color: '#E06830', label: 'Corsi' },
-}
-
-const MOCK_MARKERS = [
-  {
-    id: 1, tipo: 'eventi', lng: -3.7038, lat: 40.4268,
-    title: 'Festival Flamenco',
-    desc: 'Tre sere di flamenco puro nel cuore di Madrid con artisti di fama internazionale.',
-    indirizzo: 'Plaza de Oriente s/n, Madrid Centro',
-    orario: '21–23 Jun · 20:00–23:30',
-    associazione: 'Fundación Arte Vivo',
-  },
-  {
-    id: 2, tipo: 'eventi', lng: -3.6900, lat: 40.4150,
-    title: 'Concierto Jazz',
-    desc: 'Quartetto jazz dal vivo con aperitivo incluso. Prenotazione obbligatoria.',
-    indirizzo: 'Calle Alburquerque 14, Malasaña',
-    orario: '28 Jun · 21:00',
-    associazione: 'Sala Clamores',
-  },
-  {
-    id: 3, tipo: 'spazi', lng: -3.7138, lat: 40.4068,
-    title: 'Centro Cultural Lavapiés',
-    desc: 'Spazio multidisciplinare con sale prove, sala espositiva e co-working creativo.',
-    indirizzo: 'Calle Argumosa 11, Lavapiés',
-    orario: 'Lun–Sab · 10:00–22:00',
-    associazione: 'Ayuntamiento de Madrid',
-  },
-  {
-    id: 4, tipo: 'spazi', lng: -3.6850, lat: 40.4300,
-    title: 'Sala de Ensayo',
-    desc: 'Sala insonorizzata disponibile per band, teatro e danza. Accesso libero su prenotazione.',
-    indirizzo: 'Calle Fuencarral 80, Malasaña',
-    orario: 'Tutti i giorni · 09:00–21:00',
-    associazione: 'Colectivo Malasaña Viva',
-  },
-  {
-    id: 5, tipo: 'progetti', lng: -3.7200, lat: 40.4200,
-    title: 'Mural Colectivo',
-    desc: 'Progetto di arte pubblica partecipata: un murale di 200m² co-creato dal quartiere.',
-    indirizzo: 'Calle de la Paloma, La Latina',
-    orario: 'Inaugurazione: 15 Jul 2026',
-    associazione: 'Barrio en Movimiento',
-  },
-  {
-    id: 6, tipo: 'progetti', lng: -3.6980, lat: 40.4050,
-    title: 'Radio Comunitaria',
-    desc: 'Stazione radio autogestita del quartiere. Aperta a chiunque voglia condurre un programma.',
-    indirizzo: 'Centro Social Okupado, Lavapiés',
-    orario: 'On air: 24/7 · Studi aperti Mer/Ven 16:00',
-    associazione: 'Radio Patio',
-  },
-  {
-    id: 7, tipo: 'corsi', lng: -3.7100, lat: 40.4350,
-    title: 'Taller de Teatro',
-    desc: 'Workshop di recitazione per adulti principianti e intermedi. Metodo Stanislavski.',
-    indirizzo: 'Calle de la Luna 22, Malasaña',
-    orario: 'Lun & Mié · 18:00–20:00',
-    associazione: 'Teatro Lagrada',
-  },
-  {
-    id: 8, tipo: 'corsi', lng: -3.7020, lat: 40.3980,
-    title: 'Curso de Cerámica',
-    desc: 'Corso di ceramica per principianti: costruzione a lastra e tornio. Materiali inclusi.',
-    indirizzo: 'Calle Embajadores 53, Lavapiés',
-    orario: 'Sáb · 10:00–13:00',
-    associazione: 'Taller Tierra',
-  },
-]
+import { Link, useNavigate } from 'react-router-dom'
+import { TIPI, MOCK_MARKERS } from '../data/markers'
 
 const TOKEN = import.meta.env.VITE_MAPBOX_TOKEN
 
@@ -94,6 +21,7 @@ async function geocode(query, types, zoom, map) {
 }
 
 export default function Mappa() {
+  const navigate = useNavigate()
   const mapRef = useRef(null)
   const mapInstance = useRef(null)
   const markerRefs = useRef({})
@@ -101,8 +29,7 @@ export default function Mappa() {
   const [filtri, setFiltri] = useState({ eventi: true, spazi: true, progetti: true, corsi: true })
   const [selected, setSelected] = useState(null)
   const [cityQuery, setCityQuery] = useState('')
-  const [quartiereQuery, setQuartiereQuery] = useState('')
-  const [geoError, setGeoError] = useState({ citta: null, quartiere: null })
+  const [cityError, setCityError] = useState(null)
 
   useEffect(() => {
     if (!window.mapboxgl || mapInstance.current) return
@@ -151,16 +78,9 @@ export default function Mappa() {
 
   const handleCitySearch = async (e) => {
     if (e.key !== 'Enter' || !cityQuery.trim() || !mapInstance.current) return
-    setGeoError((prev) => ({ ...prev, citta: null }))
+    setCityError(null)
     const found = await geocode(cityQuery.trim(), 'place', 12, mapInstance.current)
-    if (!found) setGeoError((prev) => ({ ...prev, citta: `Nessun risultato per "${cityQuery}"` }))
-  }
-
-  const handleQuartiereSearch = async (e) => {
-    if (e.key !== 'Enter' || !quartiereQuery.trim() || !mapInstance.current) return
-    setGeoError((prev) => ({ ...prev, quartiere: null }))
-    const found = await geocode(quartiereQuery.trim(), 'neighborhood,locality,district,place', 14, mapInstance.current)
-    if (!found) setGeoError((prev) => ({ ...prev, quartiere: `Nessun risultato per "${quartiereQuery}"` }))
+    if (!found) setCityError(`Nessun risultato per "${cityQuery}"`)
   }
 
   const inputClass = 'w-full bg-[#0d0d0d] border border-night-border rounded-lg px-3 py-2 font-sans text-sm text-cream placeholder:text-cream/30 focus:outline-none focus:border-coral transition-colors'
@@ -235,7 +155,10 @@ export default function Mappa() {
                   </div>
                 </div>
 
-                <button className="mt-2 w-full py-2.5 rounded-full bg-coral text-cream font-sans font-semibold text-sm hover:opacity-90 transition-opacity">
+                <button
+                  onClick={() => navigate(`/eventi/${selected.id}`)}
+                  className="mt-2 w-full py-2.5 rounded-full bg-coral text-cream font-sans font-semibold text-sm hover:opacity-90 transition-opacity"
+                >
                   Scopri di più
                 </button>
               </div>
@@ -243,33 +166,18 @@ export default function Mappa() {
           ) : (
             /* ── SEARCH + FILTERS ── */
             <div className="p-5 flex flex-col gap-5">
-              {/* Search */}
-              <div className="flex flex-col gap-2">
-                <div>
-                  <input
-                    type="text"
-                    placeholder="Cerca città..."
-                    value={cityQuery}
-                    onChange={(e) => { setCityQuery(e.target.value); setGeoError((p) => ({ ...p, citta: null })) }}
-                    onKeyDown={handleCitySearch}
-                    className={inputClass}
-                  />
-                  {geoError.citta && <p className="mt-1 font-sans text-xs text-coral/80">{geoError.citta}</p>}
-                </div>
-                <div>
-                  <input
-                    type="text"
-                    placeholder="Cerca quartiere..."
-                    value={quartiereQuery}
-                    onChange={(e) => { setQuartiereQuery(e.target.value); setGeoError((p) => ({ ...p, quartiere: null })) }}
-                    onKeyDown={handleQuartiereSearch}
-                    className={inputClass}
-                  />
-                  {geoError.quartiere && <p className="mt-1 font-sans text-xs text-coral/80">{geoError.quartiere}</p>}
-                </div>
+              <div>
+                <input
+                  type="text"
+                  placeholder="Cerca città..."
+                  value={cityQuery}
+                  onChange={(e) => { setCityQuery(e.target.value); setCityError(null) }}
+                  onKeyDown={handleCitySearch}
+                  className={inputClass}
+                />
+                {cityError && <p className="mt-1 font-sans text-xs text-coral/80">{cityError}</p>}
               </div>
 
-              {/* Filters */}
               <div>
                 <p className="font-sans text-xs uppercase tracking-widest text-cream/40 mb-3">Filtra per tipo</p>
                 <div className="flex flex-col gap-2">

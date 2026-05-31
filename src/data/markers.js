@@ -1,0 +1,73 @@
+export const TIPI = {
+  eventi:   { color: '#FF5A35', label: 'Eventi' },
+  spazi:    { color: '#2E7D52', label: 'Spazi' },
+  progetti: { color: '#FFB300', label: 'Progetti' },
+  corsi:    { color: '#E06830', label: 'Corsi' },
+}
+
+export const MOCK_MARKERS = [
+  {
+    id: 1, tipo: 'eventi', lng: -3.7038, lat: 40.4268,
+    title: 'Festival Flamenco',
+    desc: 'Tre sere di flamenco puro nel cuore di Madrid con artisti di fama internazionale.',
+    indirizzo: 'Plaza de Oriente s/n, Madrid Centro',
+    orario: '21–23 Jun · 20:00–23:30',
+    associazione: 'Fundación Arte Vivo',
+  },
+  {
+    id: 2, tipo: 'eventi', lng: -3.6900, lat: 40.4150,
+    title: 'Concierto Jazz',
+    desc: 'Quartetto jazz dal vivo con aperitivo incluso. Prenotazione obbligatoria.',
+    indirizzo: 'Calle Alburquerque 14, Malasaña',
+    orario: '28 Jun · 21:00',
+    associazione: 'Sala Clamores',
+  },
+  {
+    id: 3, tipo: 'spazi', lng: -3.7138, lat: 40.4068,
+    title: 'Centro Cultural Lavapiés',
+    desc: 'Spazio multidisciplinare con sale prove, sala espositiva e co-working creativo.',
+    indirizzo: 'Calle Argumosa 11, Lavapiés',
+    orario: 'Lun–Sab · 10:00–22:00',
+    associazione: 'Ayuntamiento de Madrid',
+  },
+  {
+    id: 4, tipo: 'spazi', lng: -3.6850, lat: 40.4300,
+    title: 'Sala de Ensayo',
+    desc: 'Sala insonorizzata disponibile per band, teatro e danza. Accesso libero su prenotazione.',
+    indirizzo: 'Calle Fuencarral 80, Malasaña',
+    orario: 'Tutti i giorni · 09:00–21:00',
+    associazione: 'Colectivo Malasaña Viva',
+  },
+  {
+    id: 5, tipo: 'progetti', lng: -3.7200, lat: 40.4200,
+    title: 'Mural Colectivo',
+    desc: 'Progetto di arte pubblica partecipata: un murale di 200m² co-creato dal quartiere.',
+    indirizzo: 'Calle de la Paloma, La Latina',
+    orario: 'Inaugurazione: 15 Jul 2026',
+    associazione: 'Barrio en Movimiento',
+  },
+  {
+    id: 6, tipo: 'progetti', lng: -3.6980, lat: 40.4050,
+    title: 'Radio Comunitaria',
+    desc: 'Stazione radio autogestita del quartiere. Aperta a chiunque voglia condurre un programma.',
+    indirizzo: 'Centro Social Okupado, Lavapiés',
+    orario: 'On air: 24/7 · Studi aperti Mer/Ven 16:00',
+    associazione: 'Radio Patio',
+  },
+  {
+    id: 7, tipo: 'corsi', lng: -3.7100, lat: 40.4350,
+    title: 'Taller de Teatro',
+    desc: 'Workshop di recitazione per adulti principianti e intermedi. Metodo Stanislavski.',
+    indirizzo: 'Calle de la Luna 22, Malasaña',
+    orario: 'Lun & Mié · 18:00–20:00',
+    associazione: 'Teatro Lagrada',
+  },
+  {
+    id: 8, tipo: 'corsi', lng: -3.7020, lat: 40.3980,
+    title: 'Curso de Cerámica',
+    desc: 'Corso di ceramica per principianti: costruzione a lastra e tornio. Materiali inclusi.',
+    indirizzo: 'Calle Embajadores 53, Lavapiés',
+    orario: 'Sáb · 10:00–13:00',
+    associazione: 'Taller Tierra',
+  },
+]

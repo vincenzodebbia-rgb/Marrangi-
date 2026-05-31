@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Routes, Route, Link } from 'react-router-dom'
 import Mappa from './pages/Mappa'
+import EventoPage from './pages/EventoPage'
 
 function SunIcon() {
   return (
@@ -248,6 +249,7 @@ export default function App() {
     <Routes>
       <Route path="/" element={<HomePage dark={dark} onToggle={() => setDark(d => !d)} />} />
       <Route path="/mappa" element={<Mappa dark={dark} onToggle={() => setDark(d => !d)} />} />
+      <Route path="/eventi/:id" element={<EventoPage />} />
     </Routes>
   )
 }
