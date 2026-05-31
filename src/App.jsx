@@ -6,6 +6,7 @@ import AssociazionePage from './pages/AssociazionePage'
 import Auth from './pages/Auth'
 import Dashboard from './pages/Dashboard'
 import ArtistaProfilo from './pages/ArtistaProfilo'
+import Artisti from './pages/Artisti'
 import { useAuth } from './hooks/useAuth'
 import { supabase } from './lib/supabase'
 
@@ -56,6 +57,14 @@ function Navbar({ dark, onToggle, user, onLogout }) {
           }`}
         >
           Mappa
+        </Link>
+        <Link
+          to="/artisti"
+          className={`font-sans text-sm transition-colors ${
+            dark ? 'text-cream/60 hover:text-cream' : 'text-dark/60 hover:text-dark'
+          }`}
+        >
+          Artisti
         </Link>
         {user ? (
           <div className="flex items-center gap-3">
@@ -300,6 +309,7 @@ export default function App() {
       <Route path="/associazioni/:slug" element={<AssociazionePage />} />
       <Route path="/auth" element={<Auth />} />
       <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/artisti" element={<Artisti />} />
       <Route path="/artisti/:slug" element={<ArtistaProfilo />} />
     </Routes>
   )
