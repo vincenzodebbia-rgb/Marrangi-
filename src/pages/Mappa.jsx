@@ -77,14 +77,20 @@ const MOCK_MARKERS = [
 
 const TOKEN = import.meta.env.VITE_MAPBOX_TOKEN
 
-async function geocode(query, types, zoom, map) {
-  const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query)}.json?access_token=${TOKEN}&types=${types}&language=it,es`
+async function geocodeUrl(url, zoom, map) {
   const res = await fetch(url)
   const data = await res.json()
   if (!data.features || data.features.length === 0) return false
   const [lng, lat] = data.features[0].center
   map.flyTo({ center: [lng, lat], zoom, duration: 1400 })
   return true
+}
+
+async function geocode(query, types, zoom, map) {
+  const base = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query)}.json?access_token=${TOKEN}&language=it,es`
+  const found = await geocodeUrl(`${base}&types=${types}`, zoom, map)
+  if (found) return true
+  return geocodeUrl(base, zoom, map)
 }
 
 export default function Mappa() {
@@ -153,7 +159,7 @@ export default function Mappa() {
   const handleQuartiereSearch = async (e) => {
     if (e.key !== 'Enter' || !quartiereQuery.trim() || !mapInstance.current) return
     setGeoError((prev) => ({ ...prev, quartiere: null }))
-    const found = await geocode(quartiereQuery.trim(), 'neighborhood,locality', 14, mapInstance.current)
+    const found = await geocode(quartiereQuery.trim(), 'neighborhood,locality,district,place', 14, mapInstance.current)
     if (!found) setGeoError((prev) => ({ ...prev, quartiere: `Nessun risultato per "${quartiereQuery}"` }))
   }
 
