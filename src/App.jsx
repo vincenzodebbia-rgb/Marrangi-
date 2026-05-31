@@ -81,12 +81,12 @@ function Hero({ dark }) {
         Scopri eventi, mostre e spettacoli nella tua città. Prenota in un click.
       </p>
       <div className="flex flex-col sm:flex-row gap-4">
-        <a
-          href="#esplora"
+        <Link
+          to="/mappa"
           className="px-8 py-3 rounded-full bg-coral text-cream font-sans font-semibold text-base hover:opacity-90 transition-opacity"
         >
-          Esplora eventi
-        </a>
+          Vedi la mappa
+        </Link>
         <a
           href="#chi-siamo"
           className={`px-8 py-3 rounded-full border font-sans font-semibold text-base transition-colors ${
