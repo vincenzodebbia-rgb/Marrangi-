@@ -1,8 +1,11 @@
 import { useState } from 'react'
-import { Routes, Route, Link } from 'react-router-dom'
+import { Routes, Route, Link, useNavigate } from 'react-router-dom'
 import Mappa from './pages/Mappa'
 import EventoPage from './pages/EventoPage'
 import AssociazionePage from './pages/AssociazionePage'
+import Auth from './pages/Auth'
+import { useAuth } from './hooks/useAuth'
+import { supabase } from './lib/supabase'
 
 function SunIcon() {
   return (
@@ -28,7 +31,7 @@ function MoonIcon() {
   )
 }
 
-function Navbar({ dark, onToggle }) {
+function Navbar({ dark, onToggle, user, onLogout }) {
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 border-b backdrop-blur-sm transition-colors duration-300 ${
       dark ? 'bg-dark/90 border-night-border' : 'bg-cream/90 border-gray-200'
@@ -52,6 +55,30 @@ function Navbar({ dark, onToggle }) {
         >
           Mappa
         </Link>
+        {user ? (
+          <div className="flex items-center gap-3">
+            <span className={`font-sans text-sm ${dark ? 'text-cream/60' : 'text-dark/60'}`}>
+              Ciao, {user.user_metadata?.nome || user.email.split('@')[0]}
+            </span>
+            <button
+              onClick={onLogout}
+              className={`font-sans text-sm transition-colors ${
+                dark ? 'text-cream/40 hover:text-coral' : 'text-dark/40 hover:text-coral'
+              }`}
+            >
+              Esci
+            </button>
+          </div>
+        ) : (
+          <Link
+            to="/auth"
+            className={`font-sans text-sm transition-colors ${
+              dark ? 'text-cream/60 hover:text-cream' : 'text-dark/60 hover:text-dark'
+            }`}
+          >
+            Accedi
+          </Link>
+        )}
         <button
           onClick={onToggle}
           className={`p-2 rounded-full transition-colors ${
@@ -230,10 +257,10 @@ function Footer({ dark }) {
   )
 }
 
-function HomePage({ dark, onToggle }) {
+function HomePage({ dark, onToggle, user, onLogout }) {
   return (
     <div className={`min-h-screen transition-colors duration-300 ${dark ? 'bg-dark text-cream' : 'bg-cream text-dark'}`}>
-      <Navbar dark={dark} onToggle={onToggle} />
+      <Navbar dark={dark} onToggle={onToggle} user={user} onLogout={onLogout} />
       <Hero dark={dark} />
       <Stats dark={dark} />
       <EventsRow dark={dark} />
@@ -245,13 +272,21 @@ function HomePage({ dark, onToggle }) {
 
 export default function App() {
   const [dark, setDark] = useState(true)
+  const { user } = useAuth()
+  const navigate = useNavigate()
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut()
+    navigate('/')
+  }
 
   return (
     <Routes>
-      <Route path="/" element={<HomePage dark={dark} onToggle={() => setDark(d => !d)} />} />
+      <Route path="/" element={<HomePage dark={dark} onToggle={() => setDark(d => !d)} user={user} onLogout={handleLogout} />} />
       <Route path="/mappa" element={<Mappa dark={dark} onToggle={() => setDark(d => !d)} />} />
       <Route path="/eventi/:id" element={<EventoPage />} />
       <Route path="/associazioni/:slug" element={<AssociazionePage />} />
+      <Route path="/auth" element={<Auth />} />
     </Routes>
   )
 }
