@@ -197,7 +197,7 @@ function Footer({ dark }) {
     <footer className={`border-t py-8 px-6 ${dark ? 'border-night-border' : 'border-dark/10'}`}>
       <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
         <p className={`font-sans text-sm ${dark ? 'text-cream/40' : 'text-dark/40'}`}>
-          © 2026 Vincenzo Debbia — Marrangió
+          © 2026 Vincenzo De Biase — Marrangió
         </p>
         <div className="flex gap-6">
           {['GitHub', 'Privacy', 'Contatti'].map((label) => (
