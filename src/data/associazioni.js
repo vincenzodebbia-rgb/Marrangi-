@@ -48,7 +48,7 @@ export const ASSOCIAZIONI = [
     nome: 'Barrio en Movimiento',
     città: 'Madrid',
     categoria: 'Arte Pubblica',
-    missione: 'Trasformiamo gli spazi urbani attraverso l'arte partecipata. Murales, installazioni e interventi temporanei co-creati con i residenti dei quartieri di Madrid.',
+    missione: `Trasformiamo gli spazi urbani attraverso l'arte partecipata. Murales, installazioni e interventi temporanei co-creati con i residenti dei quartieri di Madrid.`,
     anno: 2018,
     soci: 156,
     email: 'hola@barriomovimiento.org',
