@@ -33,7 +33,7 @@ export default function Auth() {
           options: { data: { nome, tipo } },
         })
         if (err) throw err
-        navigate('/')
+        navigate(tipo === 'artista' ? '/artisti/nuovo' : '/')
       } else {
         const { error: err } = await supabase.auth.signInWithPassword({ email, password })
         if (err) throw err

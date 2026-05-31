@@ -5,6 +5,7 @@ import EventoPage from './pages/EventoPage'
 import AssociazionePage from './pages/AssociazionePage'
 import Auth from './pages/Auth'
 import Dashboard from './pages/Dashboard'
+import ArtistaProfilo from './pages/ArtistaProfilo'
 import { useAuth } from './hooks/useAuth'
 import { supabase } from './lib/supabase'
 
@@ -299,6 +300,7 @@ export default function App() {
       <Route path="/associazioni/:slug" element={<AssociazionePage />} />
       <Route path="/auth" element={<Auth />} />
       <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/artisti/:slug" element={<ArtistaProfilo />} />
     </Routes>
   )
 }

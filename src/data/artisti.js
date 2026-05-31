@@ -1,0 +1,72 @@
+export const ARTISTI = [
+  {
+    slug: 'elena-vasquez',
+    nome: 'Elena Vásquez',
+    città: 'Madrid',
+    disciplina: 'Danza',
+    bio: `Danzatrice contemporanea con base a Madrid. Formata tra Barcellona e Amsterdam, lavoro all'incrocio tra danza fisica e installazione. Ho collaborato con festival di tutta Europa e cerco nuovi spazi e compagnie con cui sperimentare.`,
+    annoInizio: 2014,
+    portfolio: 'elenadanza.com',
+    email: 'elena@elenadanza.com',
+    cerca: ['spazi', 'collaborazioni', 'progetti'],
+  },
+  {
+    slug: 'marco-ferretti',
+    nome: 'Marco Ferretti',
+    città: 'Madrid',
+    disciplina: 'Musica',
+    bio: 'Compositore e produttore musicale italo-spagnolo. Mi occupo di musica elettronica, sound design per teatro e colonne sonore indipendenti. Aperto a collaborazioni con artisti visivi e compagnie teatrali.',
+    annoInizio: 2010,
+    portfolio: 'marcoferretti.bandcamp.com',
+    email: 'marco@marcoferretti.it',
+    cerca: ['collaborazioni', 'progetti'],
+  },
+  {
+    slug: 'camila-reyes',
+    nome: 'Camila Reyes',
+    città: 'Madrid',
+    disciplina: 'Arti visive',
+    bio: 'Pittrice e muralista colombiana residente a Lavapiés. Lavoro con pittura murale, serigrafia e installazioni site-specific. Sono disponibile per residenze artistiche e progetti comunitari a lungo termine.',
+    annoInizio: 2016,
+    portfolio: 'camilareyes.art',
+    email: 'camila@camilareyes.art',
+    cerca: ['spazi', 'collaborazioni', 'tutto'],
+  },
+  {
+    slug: 'david-sanz',
+    nome: 'David Sanz',
+    città: 'Madrid',
+    disciplina: 'Teatro',
+    bio: `Attore e regista teatrale, laureato alla RESAD di Madrid. Ho diretto sei produzioni indipendenti tra il 2018 e il 2025. Cerco compagnie e spazi per sviluppare il prossimo progetto su testi contemporanei.`,
+    annoInizio: 2018,
+    portfolio: 'davidsanz.es',
+    email: 'davidsanz@teatromail.com',
+    cerca: ['spazi', 'progetti'],
+  },
+  {
+    slug: 'yuki-tanaka',
+    nome: 'Yuki Tanaka',
+    città: 'Madrid',
+    disciplina: 'Altro',
+    bio: 'Performer e artista interdisciplinare giapponese a Madrid. Il mio lavoro esplora rituali quotidiani, memoria corporea e archivi personali attraverso performance, video e oggetti. Cerco collaboratori e contesti non convenzionali.',
+    annoInizio: 2019,
+    portfolio: 'yukitanaka.net',
+    email: 'yuki@yukitanaka.net',
+    cerca: ['collaborazioni', 'tutto'],
+  },
+]
+
+export const CERCA_CONFIG = {
+  collaborazioni: { label: 'Collaborazioni', color: '#FF5A35' },
+  spazi:          { label: 'Spazi',          color: '#2E7D52' },
+  progetti:       { label: 'Progetti',       color: '#FFB300' },
+  tutto:          { label: 'Tutto',          color: '#E06830' },
+}
+
+export const DISCIPLINA_COLOR = {
+  'Teatro':      '#FF5A35',
+  'Musica':      '#FFB300',
+  'Danza':       '#2E7D52',
+  'Arti visive': '#E06830',
+  'Altro':       '#8B5CF6',
+}
