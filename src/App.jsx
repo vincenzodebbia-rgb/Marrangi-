@@ -4,6 +4,7 @@ import Mappa from './pages/Mappa'
 import EventoPage from './pages/EventoPage'
 import AssociazionePage from './pages/AssociazionePage'
 import Auth from './pages/Auth'
+import Dashboard from './pages/Dashboard'
 import { useAuth } from './hooks/useAuth'
 import { supabase } from './lib/supabase'
 
@@ -57,6 +58,16 @@ function Navbar({ dark, onToggle, user, onLogout }) {
         </Link>
         {user ? (
           <div className="flex items-center gap-3">
+            {user.user_metadata?.tipo === 'associazione' && (
+              <Link
+                to="/dashboard"
+                className={`font-sans text-sm transition-colors ${
+                  dark ? 'text-cream/60 hover:text-cream' : 'text-dark/60 hover:text-dark'
+                }`}
+              >
+                Dashboard
+              </Link>
+            )}
             <span className={`font-sans text-sm ${dark ? 'text-cream/60' : 'text-dark/60'}`}>
               Ciao, {user.user_metadata?.nome || user.email.split('@')[0]}
             </span>
@@ -287,6 +298,7 @@ export default function App() {
       <Route path="/eventi/:id" element={<EventoPage />} />
       <Route path="/associazioni/:slug" element={<AssociazionePage />} />
       <Route path="/auth" element={<Auth />} />
+      <Route path="/dashboard" element={<Dashboard />} />
     </Routes>
   )
 }
