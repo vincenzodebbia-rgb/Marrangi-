@@ -132,10 +132,15 @@ function Hero({ dark }) {
         </span>
         .
       </h1>
-      <p className={`font-sans text-lg md:text-xl max-w-xl leading-relaxed whitespace-pre-line ${
+      <p className={`font-sans text-lg md:text-xl max-w-xl leading-relaxed whitespace-pre-line mb-6 ${
         dark ? 'text-cream/60' : 'text-dark/60'
       }`}>
         {'Quello che dice che esisti.\nQuello che dice che il tuo quartiere è vivo.'}
+      </p>
+      <p className={`font-sans font-light text-sm max-w-lg leading-relaxed ${
+        dark ? 'text-cream/30' : 'text-dark/30'
+      }`}>
+        La mappa delle associazioni culturali, degli spazi e di chi costruisce nella tua città.
       </p>
     </section>
   )
@@ -219,16 +224,19 @@ function EventsRow({ dark }) {
 const TRE_PORTE = [
   {
     label: 'VUOI PARTECIPARE',
+    desc: 'Sei curioso, vuoi scoprire cosa succede intorno a te.',
     headline: "Esci. Vedi cosa c'è. Se non ti va, torna a casa. Almeno lo sai.",
     body: "Nessun influencer pagato per dirti che vale la pena. Nessun algoritmo che decide cosa devi volere. Niente fomo da gestire. Spazi vivi, eventi veri, angoli nascosti a due passi da casa tua. Non promettiamo serate indimenticabili. A volte esci e torni a casa prima. Ma l'hai scelto tu. E se anche la serata non era granché, hai sostenuto qualcuno nel tuo quartiere. Qualcuno che ci crede davvero.",
   },
   {
-    label: 'SEI UN PROFESSIONISTA CULTURALE',
+    label: 'CHI COSTRUISCE',
+    desc: "Hai un'idea, un progetto, una competenza. Vuoi costruire qualcosa o trovare chi ti permette di farlo.",
     headline: 'Hai qualcosa da dare. Nessuno sa ancora dove trovarti.',
     body: 'Ci sono associazioni che cercano qualcuno come te. Spazi che hanno bisogno di quello che sai fare. Progetti che aspettano solo le persone giuste per esistere. Senza di te gli spazi restano vuoti. I progetti restano idee. Adesso chi ha bisogno di quello che fai può trovarti.',
   },
   {
     label: "SEI UN'ASSOCIAZIONE",
+    desc: 'Lavori nel culturale, gestisci uno spazio, organizzi eventi.',
     headline: 'Lavori, crei, resisti. Ma sei invisibile.',
     body: "Volontari esauriti, burocrazia infinita, nessun budget per esistere online. Hai costruito qualcosa di vero — e nessuno lo sa. Qui il tuo puntino sulla mappa dice che ci sei, cosa fai, dove sei. Gratis. Sempre. Trovi chi cerca quello che fai, professionisti che vogliono fare parte di qualcosa di vero, realtà come la tua. Non ti chiediamo niente. Ti diamo solo lo spazio per dire che esisti.",
   },
@@ -239,9 +247,10 @@ function TrePorte({ dark }) {
     <section className={`py-16 border-t ${dark ? 'border-night-border' : 'border-dark/10'}`}>
       <div className="max-w-5xl mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {TRE_PORTE.map(({ label, headline, body }) => (
+          {TRE_PORTE.map(({ label, desc, headline, body }) => (
             <div key={label} className={`rounded-2xl p-6 border ${dark ? 'bg-night-card border-night-border' : 'bg-white border-dark/10'}`}>
-              <p className="font-sans text-xs font-semibold uppercase tracking-widest text-coral mb-3">{label}</p>
+              <p className="font-sans text-xs font-semibold uppercase tracking-widest text-coral mb-2">{label}</p>
+              <p className={`font-sans text-xs italic mb-4 ${dark ? 'text-cream/40' : 'text-dark/40'}`}>{desc}</p>
               <h3 className={`font-playfair italic text-lg mb-4 leading-snug ${dark ? 'text-cream' : 'text-dark'}`}>{headline}</h3>
               <p className={`font-sans text-sm leading-relaxed ${dark ? 'text-cream/50' : 'text-dark/50'}`}>{body}</p>
             </div>
@@ -256,8 +265,13 @@ function Manifesto({ dark }) {
   return (
     <section className={`py-20 border-t ${dark ? 'border-night-border' : 'border-dark/10'}`}>
       <div className="max-w-2xl mx-auto px-6">
-        <p className={`font-playfair italic text-3xl md:text-4xl leading-snug mb-10 whitespace-pre-line ${dark ? 'text-cream' : 'text-dark'}`}>
+        <p className={`font-playfair italic text-3xl md:text-4xl leading-snug mb-6 whitespace-pre-line ${dark ? 'text-cream' : 'text-dark'}`}>
           {"Sotto la tua città c'è un'altra città.\nViva. Nascosta."}
+        </p>
+        <p className={`font-sans font-light text-sm leading-relaxed pb-8 mb-8 border-b ${
+          dark ? 'text-cream/40 border-night-border' : 'text-dark/40 border-dark/10'
+        }`}>
+          Marrangió è la mappa delle associazioni culturali, degli spazi e di chi costruisce nella tua città — tutto visibile allo stesso modo, senza che nessuno paghi per esistere più degli altri.
         </p>
         <p className={`font-sans text-base leading-relaxed mb-6 ${dark ? 'text-cream/60' : 'text-dark/60'}`}>
           Ci sono associazioni che lavorano da vent'anni in un seminterrato. Spazi che aprono ogni giovedì senza un euro di pubblicità. Artisti che costruiscono qualcosa di reale mentre nessuno guarda. Persone che tengono in piedi un quartiere intero con le proprie mani — spesso senza che nessuno lo sappia.
