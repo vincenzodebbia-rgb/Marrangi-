@@ -16,6 +16,7 @@ export default {
         syne: ['Syne', 'sans-serif'],
         sans: ['DM Sans', 'sans-serif'],
         unbounded: ['Unbounded', 'sans-serif'],
+        playfair: ['Playfair Display', 'serif'],
       },
     },
   },

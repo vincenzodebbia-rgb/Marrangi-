@@ -117,37 +117,26 @@ function Navbar({ dark, onToggle, user, onLogout }) {
 function Hero({ dark }) {
   return (
     <section className="min-h-screen flex flex-col items-center justify-center text-center px-6 pt-20">
+      <p className={`font-playfair italic text-3xl md:text-4xl mb-2 ${dark ? 'text-cream' : 'text-dark'}`}>
+        Il barrio che vive.
+      </p>
+      <p className={`font-sans text-sm md:text-base mb-12 ${dark ? 'text-cream/40' : 'text-dark/40'}`}>
+        Tu barrio vive.
+      </p>
       <h1 className={`font-syne font-bold text-4xl md:text-6xl lg:text-7xl leading-tight mb-6 max-w-4xl ${
         dark ? 'text-cream' : 'text-dark'
       }`}>
-        Fai cultura.{' '}
-        <span className="bg-gradient-to-r from-coral via-gold to-cream bg-clip-text text-transparent">
-          Al resto pensiamo noi.
+        Il tuo puntino sulla{' '}
+        <span className="bg-gradient-to-r from-coral to-gold bg-clip-text text-transparent">
+          mappa
         </span>
+        .
       </h1>
-      <p className={`font-sans text-lg md:text-xl mb-10 max-w-xl leading-relaxed ${
+      <p className={`font-sans text-lg md:text-xl max-w-xl leading-relaxed whitespace-pre-line ${
         dark ? 'text-cream/60' : 'text-dark/60'
       }`}>
-        Scopri eventi, mostre e spettacoli nella tua città. Prenota in un click.
+        {'Quello che dice che esisti.\nQuello che dice che il tuo quartiere è vivo.'}
       </p>
-      <div className="flex flex-col sm:flex-row gap-4">
-        <Link
-          to="/mappa"
-          className="px-8 py-3 rounded-full bg-coral text-cream font-sans font-semibold text-base hover:opacity-90 transition-opacity"
-        >
-          Vedi la mappa
-        </Link>
-        <a
-          href="#chi-siamo"
-          className={`px-8 py-3 rounded-full border font-sans font-semibold text-base transition-colors ${
-            dark
-              ? 'border-night-border text-cream hover:border-cream/50'
-              : 'border-dark/25 text-dark hover:border-dark/60'
-          }`}
-        >
-          Chi siamo
-        </a>
-      </div>
     </section>
   )
 }
@@ -227,27 +216,70 @@ function EventsRow({ dark }) {
   )
 }
 
-const FOR_ALL = [
-  { title: 'Associazioni' },
-  { title: 'Artisti' },
-  { title: 'Cittadini' },
+const TRE_PORTE = [
+  {
+    label: 'VUOI PARTECIPARE',
+    headline: "Esci. Vedi cosa c'è. Se non ti va, torna a casa. Almeno lo sai.",
+    body: "Nessun influencer pagato per dirti che vale la pena. Nessun algoritmo che decide cosa devi volere. Niente fomo da gestire. Spazi vivi, eventi veri, angoli nascosti a due passi da casa tua. Non promettiamo serate indimenticabili. A volte esci e torni a casa prima. Ma l'hai scelto tu. E se anche la serata non era granché, hai sostenuto qualcuno nel tuo quartiere. Qualcuno che ci crede davvero.",
+  },
+  {
+    label: 'SEI UN PROFESSIONISTA CULTURALE',
+    headline: 'Hai qualcosa da dare. Nessuno sa ancora dove trovarti.',
+    body: 'Ci sono associazioni che cercano qualcuno come te. Spazi che hanno bisogno di quello che sai fare. Progetti che aspettano solo le persone giuste per esistere. Senza di te gli spazi restano vuoti. I progetti restano idee. Adesso chi ha bisogno di quello che fai può trovarti.',
+  },
+  {
+    label: "SEI UN'ASSOCIAZIONE",
+    headline: 'Lavori, crei, resisti. Ma sei invisibile.',
+    body: "Volontari esauriti, burocrazia infinita, nessun budget per esistere online. Hai costruito qualcosa di vero — e nessuno lo sa. Qui il tuo puntino sulla mappa dice che ci sei, cosa fai, dove sei. Gratis. Sempre. Trovi chi cerca quello che fai, professionisti che vogliono fare parte di qualcosa di vero, realtà come la tua. Non ti chiediamo niente. Ti diamo solo lo spazio per dire che esisti.",
+  },
 ]
 
-function ForAll({ dark }) {
+function TrePorte({ dark }) {
   return (
     <section className={`py-16 border-t ${dark ? 'border-night-border' : 'border-dark/10'}`}>
       <div className="max-w-5xl mx-auto px-6">
-        <h2 className={`font-syne font-bold text-2xl md:text-3xl mb-10 text-center ${dark ? 'text-cream' : 'text-dark'}`}>
-          Marrangió è per tutti
-        </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {FOR_ALL.map(({ title }) => (
-            <div key={title} className={`rounded-2xl p-6 border ${dark ? 'bg-night-card border-night-border' : 'bg-white border-dark/10'}`}>
-              <h3 className={`font-syne font-bold text-lg mb-3 ${dark ? 'text-cream' : 'text-dark'}`}>{title}</h3>
-              <p className={`font-sans text-sm leading-relaxed ${dark ? 'text-cream/50' : 'text-dark/50'}`}>Testo</p>
+          {TRE_PORTE.map(({ label, headline, body }) => (
+            <div key={label} className={`rounded-2xl p-6 border ${dark ? 'bg-night-card border-night-border' : 'bg-white border-dark/10'}`}>
+              <p className="font-sans text-xs font-semibold uppercase tracking-widest text-coral mb-3">{label}</p>
+              <h3 className={`font-playfair italic text-lg mb-4 leading-snug ${dark ? 'text-cream' : 'text-dark'}`}>{headline}</h3>
+              <p className={`font-sans text-sm leading-relaxed ${dark ? 'text-cream/50' : 'text-dark/50'}`}>{body}</p>
             </div>
           ))}
         </div>
+      </div>
+    </section>
+  )
+}
+
+function Manifesto({ dark }) {
+  return (
+    <section className={`py-20 border-t ${dark ? 'border-night-border' : 'border-dark/10'}`}>
+      <div className="max-w-2xl mx-auto px-6">
+        <p className={`font-playfair italic text-3xl md:text-4xl leading-snug mb-10 whitespace-pre-line ${dark ? 'text-cream' : 'text-dark'}`}>
+          {"Sotto la tua città c'è un'altra città.\nViva. Nascosta."}
+        </p>
+        <p className={`font-sans text-base leading-relaxed mb-6 ${dark ? 'text-cream/60' : 'text-dark/60'}`}>
+          Ci sono associazioni che lavorano da vent'anni in un seminterrato. Spazi che aprono ogni giovedì senza un euro di pubblicità. Artisti che costruiscono qualcosa di reale mentre nessuno guarda. Persone che tengono in piedi un quartiere intero con le proprie mani — spesso senza che nessuno lo sappia.
+        </p>
+        <p className={`font-sans text-base font-bold leading-relaxed mb-6 ${dark ? 'text-cream' : 'text-dark'}`}>
+          Queste persone sono il quartiere che vive.
+        </p>
+        <p className={`font-sans text-base leading-relaxed mb-6 ${dark ? 'text-cream/60' : 'text-dark/60'}`}>
+          E poi ci sono quelli che cercano. Che escono la sera e non trovano niente che valga davvero. Che vorrebbero qualcosa di vivo e vicino ma non sanno dove guardare. Che seguono influencer pagati per pubblicizzare eventi e tornano a casa con la sensazione di aver speso soldi per niente.
+        </p>
+        <p className={`font-sans text-base leading-relaxed mb-6 ${dark ? 'text-cream/60' : 'text-dark/60'}`}>
+          Marrangió è il posto in cui questi due mondi si incontrano. Una mappa. Più siete, più il quartiere esiste. Più vi connettete, più la città cambia. Non dall'alto. Dal basso. Da un seminterrato, da uno spazio piccolo.
+        </p>
+        <p className={`font-sans text-base leading-relaxed mb-6 ${dark ? 'text-cream/60' : 'text-dark/60'}`}>
+          Non chiamiamola cultura. Parliamo di gente che fa cose. A volte bellissime, a volte no. Ma vere.
+        </p>
+        <p className={`font-sans text-base leading-relaxed mb-12 ${dark ? 'text-cream/60' : 'text-dark/60'}`}>
+          Niente algoritmi. Niente pubblicità. Solo una mappa viva — che cresce ogni volta che qualcuno decide di entrarci. Questa piazza diventa grande solo se ci entrate voi.
+        </p>
+        <p className={`font-playfair italic text-3xl md:text-4xl pt-10 border-t ${dark ? 'text-cream border-night-border' : 'text-dark border-dark/10'}`}>
+          Vedetevi.
+        </p>
       </div>
     </section>
   )
@@ -285,7 +317,8 @@ function HomePage({ dark, onToggle, user, onLogout }) {
       <Hero dark={dark} />
       <Stats dark={dark} />
       <EventsRow dark={dark} />
-      <ForAll dark={dark} />
+      <TrePorte dark={dark} />
+      <Manifesto dark={dark} />
       <Footer dark={dark} />
     </div>
   )
