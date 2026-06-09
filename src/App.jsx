@@ -118,7 +118,7 @@ function Navbar({ dark, onToggle, user, onLogout }) {
 function Hero({ dark }) {
   return (
     <section className="min-h-screen flex flex-col items-center justify-center text-center px-6 pt-20" style={{ position: 'relative' }}>
-      <div style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0.10, pointerEvents: 'none', zIndex: 0 }}>
+      <div style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0.25, pointerEvents: 'none', zIndex: 0, transform: 'scale(1.4)', transformOrigin: 'center center' }}>
         <MapLucera />
       </div>
       <div style={{ position: 'relative', zIndex: 1 }}>
@@ -335,7 +335,6 @@ function HomePage({ dark, onToggle, user, onLogout }) {
     <div className={`min-h-screen transition-colors duration-300 ${dark ? 'bg-dark text-cream' : 'bg-cream text-dark'}`}>
       <Navbar dark={dark} onToggle={onToggle} user={user} onLogout={onLogout} />
       <Hero dark={dark} />
-      <Stats dark={dark} />
       <EventsRow dark={dark} />
       <TrePorte dark={dark} />
       <Manifesto dark={dark} />
