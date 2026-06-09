@@ -36,19 +36,9 @@ function MoonIcon() {
 
 function Navbar({ dark, onToggle, user, onLogout }) {
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 border-b backdrop-blur-sm transition-colors duration-300 ${
+    <nav className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-end px-6 py-4 border-b backdrop-blur-sm transition-colors duration-300 ${
       dark ? 'bg-dark/90 border-night-border' : 'bg-cream/90 border-gray-200'
     }`}>
-      <span
-        className={`font-unbounded text-xl select-none ${
-          dark
-            ? 'bg-gradient-to-r from-[#FF3A0F] to-[#FFB300] bg-clip-text text-transparent'
-            : 'text-[#D94F2B]'
-        }`}
-        style={{ fontWeight: 900, letterSpacing: '3px' }}
-      >
-        MARRANGIÓ
-      </span>
       <div className="flex items-center gap-4">
         <Link
           to="/mappa"
@@ -116,34 +106,26 @@ function Navbar({ dark, onToggle, user, onLogout }) {
 
 function Hero({ dark }) {
   return (
-    <section className="min-h-screen flex flex-col items-center justify-center text-center px-6 pt-20">
-      <div className="flex items-center justify-center mb-8">
-        <img src="/logo.png" alt="Marrangió" style={{ height: '120px', marginRight: '16px' }} />
+    <section className="min-h-screen flex flex-col items-center justify-center text-center px-6">
+      <div className="flex items-center justify-center">
+        <img src="/logo.png" alt="Marrangió" style={{ height: '160px', marginRight: '16px' }} />
         <span
-          className="font-unbounded bg-gradient-to-r from-coral to-gold bg-clip-text text-transparent text-4xl md:text-6xl select-none"
+          className="font-unbounded bg-gradient-to-r from-coral to-gold bg-clip-text text-transparent text-5xl md:text-7xl select-none leading-none"
           style={{ fontWeight: 900 }}
         >
           MARRANGIÓ
         </span>
       </div>
-      <p className={`font-playfair italic text-3xl md:text-4xl mb-2 ${dark ? 'text-cream' : 'text-dark'}`}>
+      <p className={`font-syne text-2xl mt-4 ${dark ? 'text-cream' : 'text-dark'}`}>
         Il barrio che vive.
       </p>
-      <p className={`font-sans text-sm md:text-base mb-12 ${dark ? 'text-cream/40' : 'text-dark/40'}`}>
+      <p className={`font-sans text-lg ${dark ? 'text-cream/40' : 'text-dark/40'}`}>
         Tu barrio vive.
       </p>
-      <h1 className={`font-syne font-bold text-4xl md:text-6xl lg:text-7xl leading-tight mb-6 max-w-4xl ${
-        dark ? 'text-cream' : 'text-dark'
-      }`}>
-        Il tuo puntino sulla{' '}
-        <span className="bg-gradient-to-r from-coral to-gold bg-clip-text text-transparent">
-          mappa
-        </span>
-        .
-      </h1>
-      <p className={`font-sans text-lg md:text-xl max-w-xl leading-relaxed ${
-        dark ? 'text-cream/60' : 'text-dark/60'
-      }`}>
+      <p className={`font-syne font-bold text-xl mt-6 ${dark ? 'text-cream' : 'text-dark'}`}>
+        Il tuo puntino sulla mappa.
+      </p>
+      <p className={`font-sans text-base max-w-lg leading-relaxed ${dark ? 'text-cream/50' : 'text-dark/50'}`}>
         Quello che dice che esisti. Quello che dice che il tuo quartiere è vivo.
       </p>
     </section>
