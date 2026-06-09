@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Routes, Route, Link, useNavigate } from 'react-router-dom'
+import MapLucera from './components/MapLucera'
 import Mappa from './pages/Mappa'
 import EventoPage from './pages/EventoPage'
 import AssociazionePage from './pages/AssociazionePage'
@@ -116,32 +117,37 @@ function Navbar({ dark, onToggle, user, onLogout }) {
 
 function Hero({ dark }) {
   return (
-    <section className="min-h-screen flex flex-col items-center justify-center text-center px-6 pt-20">
-      <p className={`font-playfair italic text-3xl md:text-4xl mb-2 ${dark ? 'text-cream' : 'text-dark'}`}>
-        Il barrio che vive.
-      </p>
-      <p className={`font-sans text-sm md:text-base mb-12 ${dark ? 'text-cream/40' : 'text-dark/40'}`}>
-        Tu barrio vive.
-      </p>
-      <h1 className={`font-syne font-bold text-4xl md:text-6xl lg:text-7xl leading-tight mb-6 max-w-4xl ${
-        dark ? 'text-cream' : 'text-dark'
-      }`}>
-        Il tuo puntino sulla{' '}
-        <span className="bg-gradient-to-r from-coral to-gold bg-clip-text text-transparent">
-          mappa
-        </span>
-        .
-      </h1>
-      <p className={`font-sans text-lg md:text-xl max-w-xl leading-relaxed whitespace-pre-line mb-6 ${
-        dark ? 'text-cream/60' : 'text-dark/60'
-      }`}>
-        {'Quello che dice che esisti.\nQuello che dice che il tuo quartiere è vivo.'}
-      </p>
-      <p className={`font-sans font-light text-sm max-w-lg leading-relaxed ${
-        dark ? 'text-cream/30' : 'text-dark/30'
-      }`}>
-        La mappa delle associazioni culturali, degli spazi e di chi costruisce nella tua città.
-      </p>
+    <section className="min-h-screen flex flex-col items-center justify-center text-center px-6 pt-20" style={{ position: 'relative' }}>
+      <div style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0.10, pointerEvents: 'none', zIndex: 0 }}>
+        <MapLucera />
+      </div>
+      <div style={{ position: 'relative', zIndex: 1 }}>
+        <p className={`font-playfair italic text-3xl md:text-4xl mb-2 ${dark ? 'text-cream' : 'text-dark'}`}>
+          Il barrio che vive.
+        </p>
+        <p className={`font-sans text-sm md:text-base mb-12 ${dark ? 'text-cream/40' : 'text-dark/40'}`}>
+          Tu barrio vive.
+        </p>
+        <h1 className={`font-syne font-bold text-4xl md:text-6xl lg:text-7xl leading-tight mb-6 max-w-4xl ${
+          dark ? 'text-cream' : 'text-dark'
+        }`}>
+          Il tuo puntino sulla{' '}
+          <span className="bg-gradient-to-r from-coral to-gold bg-clip-text text-transparent">
+            mappa
+          </span>
+          .
+        </h1>
+        <p className={`font-sans text-lg md:text-xl max-w-xl leading-relaxed whitespace-pre-line mb-6 ${
+          dark ? 'text-cream/60' : 'text-dark/60'
+        }`}>
+          {'Quello che dice che esisti.\nQuello che dice che il tuo quartiere è vivo.'}
+        </p>
+        <p className={`font-sans font-light text-sm max-w-lg leading-relaxed ${
+          dark ? 'text-cream/30' : 'text-dark/30'
+        }`}>
+          La mappa delle associazioni culturali, degli spazi e di chi costruisce nella tua città.
+        </p>
+      </div>
     </section>
   )
 }
