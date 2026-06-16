@@ -24,10 +24,19 @@ export default function MapboxWrapper({ center = [15.517, 41.507], zoom = 13, ma
 
     map.on('load', () => {
       markers.forEach(({ name, tipo, lng, lat, href = '#' }) => {
-        const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(
+        const el = document.createElement('div')
+        el.style.cssText = `
+          width: 14px;
+          height: 14px;
+          border-radius: 50%;
+          background-color: ${TYPE_COLORS[tipo] ?? '#888888'};
+          border: 2px solid rgba(255,255,255,0.6);
+          cursor: pointer;
+        `
+        const popup = new mapboxgl.Popup({ offset: 10 }).setHTML(
           `<strong>${name}</strong><br/><a href="${href}">Vedi pagina</a>`
         )
-        new mapboxgl.Marker({ color: TYPE_COLORS[tipo] ?? '#888888' })
+        new mapboxgl.Marker({ element: el })
           .setLngLat([lng, lat])
           .setPopup(popup)
           .addTo(map)
