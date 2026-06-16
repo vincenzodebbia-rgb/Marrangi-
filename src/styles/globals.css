@@ -2,9 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --mar: #E8843C;
+  --crema: #F2E7D3;
+  --nero: #0a0806;
+  --verde: #2E7D52;
+  --celeste: #5BB8D4;
+}
+
 @layer base {
   html {
-    @apply bg-dark text-cream font-sans;
+    background-color: var(--nero);
+    color: var(--crema);
+    font-family: var(--font-grotesk), sans-serif;
   }
 }
 
