@@ -23,10 +23,10 @@ export default function Home() {
         <Image
           src="/logo.png"
           alt="Marrangio"
-          height={200}
-          width={200}
+          height={180}
+          width={180}
           className="animate-float object-contain"
-          style={{ height: '200px', width: 'auto' }}
+          style={{ height: '180px', width: 'auto' }}
           priority
         />
       </button>
@@ -34,7 +34,7 @@ export default function Home() {
       <Link
         href="/mappa"
         className="mt-6 font-caveat font-bold text-2xl transition-colors duration-700"
-        style={{ color: isDay ? 'var(--nero)' : 'var(--crema)' }}
+        style={{ color: isDay ? '#2a1206' : 'var(--crema)' }}
       >
         scopri la mappa
       </Link>
@@ -42,7 +42,7 @@ export default function Home() {
       <Link
         href="/accesso"
         className="absolute bottom-6 right-6 font-grotesk text-sm transition-colors duration-700"
-        style={{ color: isDay ? 'rgba(10,8,6,0.45)' : 'rgba(242,231,211,0.45)' }}
+        style={{ color: isDay ? 'rgba(10,8,6,0.60)' : 'rgba(242,231,211,0.60)' }}
       >
         sei un&apos;associazione?
       </Link>

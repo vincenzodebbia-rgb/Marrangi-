@@ -1,5 +1,7 @@
 import { Unbounded, Caveat, Space_Grotesk } from 'next/font/google'
+import Script from 'next/script'
 import '../styles/globals.css'
+import PWAInstall from './components/PWAInstall'
 
 const unbounded = Unbounded({
   subsets: ['latin'],
@@ -20,14 +22,24 @@ const spaceGrotesk = Space_Grotesk({
 })
 
 export const metadata = {
-  title: 'Marrangio',
+  title: 'Marrangió',
   description: 'Mappa culturale di Lucera',
+  manifest: '/manifest.json',
+  themeColor: '#E8843C',
 }
 
 export default function RootLayout({ children }) {
   return (
     <html lang="it" className={`${unbounded.variable} ${caveat.variable} ${spaceGrotesk.variable}`}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <PWAInstall />
+        <Script id="sw-register" strategy="afterInteractive">{`
+          if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js')
+          }
+        `}</Script>
+      </body>
     </html>
   )
 }
