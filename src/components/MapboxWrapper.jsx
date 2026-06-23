@@ -1,9 +1,5 @@
 'use client'
 import { useEffect, useRef } from 'react'
-import mapboxgl from 'mapbox-gl'
-import 'mapbox-gl/dist/mapbox-gl.css'
-
-const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? ''
 
 const TYPE_COLORS = {
   associazione: '#2E7D52',
@@ -15,37 +11,53 @@ export default function MapboxWrapper({ center = [15.517, 41.507], zoom = 13, ma
 
   useEffect(() => {
     if (!containerRef.current) return
-    mapboxgl.accessToken = MAPBOX_TOKEN
-    const map = new mapboxgl.Map({
-      container: containerRef.current,
-      style: 'mapbox://styles/mapbox/dark-v11',
-      center,
-      zoom,
-    })
 
-    map.on('load', () => {
-      markers.forEach(({ name, tipo, lng, lat, href = '#' }) => {
-        const el = document.createElement('div')
-        el.style.cssText = `
-          width: 14px;
-          height: 14px;
-          border-radius: 50%;
-          background-color: ${TYPE_COLORS[tipo] ?? '#888888'};
-          border: 2px solid rgba(255,255,255,0.6);
-          cursor: pointer;
-        `
-        const popup = new mapboxgl.Popup({ offset: 10 }).setHTML(
-          `<strong>${name}</strong><br/><a href="${href}">Vedi pagina</a>`
-        )
-        new mapboxgl.Marker({ element: el })
-          .setLngLat([lng, lat])
-          .setPopup(popup)
-          .addTo(map)
+    let map
+    let cancelled = false
+
+    const init = async () => {
+      const mapboxgl = await import('mapbox-gl')
+      await import('mapbox-gl/dist/mapbox-gl.css')
+      if (cancelled) return
+
+      mapboxgl.default.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? ''
+
+      map = new mapboxgl.default.Map({
+        container: containerRef.current,
+        style: 'mapbox://styles/mapbox/dark-v11',
+        center,
+        zoom,
       })
-    })
 
-    return () => map.remove()
+      map.on('load', () => {
+        markers.forEach(({ name, tipo, lng, lat, href = '#' }) => {
+          const el = document.createElement('div')
+          el.style.cssText = `
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background-color: ${TYPE_COLORS[tipo] ?? '#888888'};
+            border: 2px solid rgba(255,255,255,0.6);
+            cursor: pointer;
+          `
+          const popup = new mapboxgl.default.Popup({ offset: 10 }).setHTML(
+            `<strong>${name}</strong><br/><a href="${href}">Vedi pagina</a>`
+          )
+          new mapboxgl.default.Marker({ element: el })
+            .setLngLat([lng, lat])
+            .setPopup(popup)
+            .addTo(map)
+        })
+      })
+    }
+
+    init()
+
+    return () => {
+      cancelled = true
+      if (map) map.remove()
+    }
   }, [])
 
-  return <div ref={containerRef} className="w-full h-full" />
+  return <div ref={containerRef} style={{ width: '100%', height: '100%' }} />
 }
