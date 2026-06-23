@@ -36,7 +36,12 @@ export default function Mappa() {
         ))}
       </nav>
       <div style={{ flex: 1, position: 'relative', minHeight: 0 }}>
-        <MapboxWrapper center={[15.517, 41.507]} zoom={13} markers={MARKERS} />
+        <MapboxWrapper
+          center={[15.517, 41.507]}
+          zoom={13}
+          markers={MARKERS}
+          token={process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? ''}
+        />
       </div>
     </div>
   )

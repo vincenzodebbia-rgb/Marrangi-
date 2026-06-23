@@ -6,7 +6,7 @@ const TYPE_COLORS = {
   evento: '#E8843C',
 }
 
-export default function MapboxWrapper({ center = [15.517, 41.507], zoom = 13, markers = [] }) {
+export default function MapboxWrapper({ center = [15.517, 41.507], zoom = 13, markers = [], token = '' }) {
   const containerRef = useRef(null)
 
   useEffect(() => {
@@ -20,7 +20,8 @@ export default function MapboxWrapper({ center = [15.517, 41.507], zoom = 13, ma
       await import('mapbox-gl/dist/mapbox-gl.css')
       if (cancelled) return
 
-      mapboxgl.default.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? ''
+      console.log('token:', token)
+      mapboxgl.default.accessToken = token
 
       map = new mapboxgl.default.Map({
         container: containerRef.current,
