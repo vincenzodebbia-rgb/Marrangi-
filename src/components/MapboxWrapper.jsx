@@ -59,5 +59,10 @@ export default function MapboxWrapper({ center = [15.517, 41.507], zoom = 13, ma
     }
   }, [])
 
-  return <div ref={containerRef} style={{ width: '100%', height: '100%' }} />
+  return (
+    <div
+      ref={containerRef}
+      style={{ width: '100%', height: '100%', minHeight: '100vh' }}
+    />
+  )
 }
