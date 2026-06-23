@@ -22,6 +22,8 @@ const inputStyle = {
   outline: 'none',
 }
 
+const cfg_style = { background: '#0a0806', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(242,231,211,0.4)', fontFamily: 'var(--font-grotesk)' }
+
 export default function Dashboard() {
   const router = useRouter()
   const [sezione, setSezione] = useState('eventi')
@@ -35,6 +37,7 @@ export default function Dashboard() {
   const [indirizzo, setIndirizzo] = useState('')
 
   useEffect(() => {
+    if (!supabase) { setLoading(false); return }
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!session) { router.replace('/accesso'); return }
       setUtente(session.user)
@@ -51,6 +54,8 @@ export default function Dashboard() {
     e.preventDefault()
     console.log({ titolo, data, ora, indirizzo })
   }
+
+  if (!supabase) return <main style={cfg_style}>Configurazione in corso...</main>
 
   if (loading) return (
     <main style={{ background: '#0a0806', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

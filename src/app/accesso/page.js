@@ -33,6 +33,8 @@ const btnPrimary = {
   marginTop: '0.5rem',
 }
 
+const loading_style = { background: '#0a0806', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(242,231,211,0.4)', fontFamily: 'var(--font-grotesk)' }
+
 export default function Accesso() {
   const router = useRouter()
   const [tab, setTab] = useState('accedi')
@@ -43,14 +45,17 @@ export default function Accesso() {
   const [errore, setErrore] = useState('')
   const [loading, setLoading] = useState(false)
 
+  if (!supabase) return <main style={loading_style}>Configurazione in corso...</main>
+
   const accedi = async (e) => {
     e.preventDefault()
     setErrore('')
     setLoading(true)
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password })
     setLoading(false)
     if (error) { setErrore(error.message); return }
-    router.push('/mappa')
+    const tipo = data.user?.user_metadata?.tipo?.toLowerCase()
+    router.push(tipo === 'associazione' ? '/dashboard' : '/mappa')
   }
 
   const registrati = async (e) => {
