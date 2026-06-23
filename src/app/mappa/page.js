@@ -14,7 +14,7 @@ const MARKERS = [
 
 export default function Mappa() {
   return (
-    <div style={{ width: '100vw', height: '100vh', position: 'relative' }}>
+    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
       <nav style={{
         position: 'fixed',
         top: 0,
@@ -35,7 +35,9 @@ export default function Mappa() {
           </Link>
         ))}
       </nav>
-      <MapboxWrapper center={[15.517, 41.507]} zoom={13} markers={MARKERS} />
+      <div style={{ flex: 1, position: 'relative', minHeight: 0 }}>
+        <MapboxWrapper center={[15.517, 41.507]} zoom={13} markers={MARKERS} />
+      </div>
     </div>
   )
 }
