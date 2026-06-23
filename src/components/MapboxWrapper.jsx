@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react'
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 
-mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN
+const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? ''
 
 const TYPE_COLORS = {
   associazione: '#2E7D52',
@@ -15,6 +15,7 @@ export default function MapboxWrapper({ center = [15.517, 41.507], zoom = 13, ma
 
   useEffect(() => {
     if (!containerRef.current) return
+    mapboxgl.accessToken = MAPBOX_TOKEN
     const map = new mapboxgl.Map({
       container: containerRef.current,
       style: 'mapbox://styles/mapbox/dark-v11',
