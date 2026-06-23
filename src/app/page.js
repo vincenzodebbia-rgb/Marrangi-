@@ -40,6 +40,14 @@ export default function Home() {
       </Link>
 
       <Link
+        href="/chi-sei"
+        className="mt-2 font-caveat text-sm transition-colors duration-700"
+        style={{ color: isDay ? 'rgba(42,18,6,0.40)' : 'rgba(242,231,211,0.40)' }}
+      >
+        prima, scopri cos&apos;è
+      </Link>
+
+      <Link
         href="/accesso"
         className="absolute bottom-6 right-6 font-grotesk text-sm transition-colors duration-700"
         style={{ color: isDay ? 'rgba(10,8,6,0.60)' : 'rgba(242,231,211,0.60)' }}

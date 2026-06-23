@@ -1,4 +1,5 @@
 import dynamic from 'next/dynamic'
+import Link from 'next/link'
 
 const MapboxWrapper = dynamic(() => import('@/components/MapboxWrapper'), { ssr: false })
 
@@ -12,7 +13,27 @@ const MARKERS = [
 
 export default function Mappa() {
   return (
-    <div style={{ width: '100vw', height: '100vh' }}>
+    <div style={{ width: '100vw', height: '100vh', position: 'relative' }}>
+      <nav style={{
+        position: 'fixed',
+        top: 0,
+        right: 0,
+        zIndex: 10,
+        display: 'flex',
+        gap: '1rem',
+        padding: '1rem',
+      }}>
+        {[['chi siamo', '/chi-siamo'], ['chi sei', '/chi-sei'], ['accedi', '/accesso']].map(([label, href]) => (
+          <Link
+            key={href}
+            href={href}
+            className="font-grotesk text-xs opacity-50 hover:opacity-100 transition-opacity duration-150"
+            style={{ color: '#F2E7D3', textDecoration: 'none' }}
+          >
+            {label}
+          </Link>
+        ))}
+      </nav>
       <MapboxWrapper center={[15.517, 41.507]} zoom={13} markers={MARKERS} />
     </div>
   )
