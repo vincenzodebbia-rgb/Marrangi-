@@ -27,11 +27,11 @@ export default function MapboxWrapper({ center, zoom, markers }) {
         zoom,
       })
       map.on('load', () => {
-        markers.forEach(({ name, tipo, lng, lat }) => {
+        markers.forEach(({ name, tipo, lng, lat, slug }) => {
           const color = tipo === 'associazione' ? '#2E7D52' : '#E8843C'
 
           const wrapper = document.createElement('div')
-          wrapper.style.cssText = 'position:relative;width:24px;height:24px;display:flex;align-items:center;justify-content:center'
+          wrapper.style.cssText = 'position:relative;width:24px;height:24px;display:flex;align-items:center;justify-content:center;cursor:pointer'
 
           const pulse = document.createElement('div')
           pulse.style.cssText = `position:absolute;width:24px;height:24px;border-radius:50%;background:${color};opacity:0.4;animation:pulse 2s ease-out infinite`
@@ -42,8 +42,12 @@ export default function MapboxWrapper({ center, zoom, markers }) {
           wrapper.appendChild(pulse)
           wrapper.appendChild(dot)
 
+          const popup = new mapboxgl.default.Popup({ offset: 16, closeButton: false })
+            .setHTML(`<a href="${slug ? `/eventi/${slug}` : '#'}" style="font-family:sans-serif;font-size:0.85rem;color:#E8843C;text-decoration:none;font-weight:600">${name}</a>`)
+
           new mapboxgl.default.Marker({ element: wrapper })
             .setLngLat([lng, lat])
+            .setPopup(popup)
             .addTo(map)
         })
       })

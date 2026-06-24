@@ -12,19 +12,19 @@ export default function Mappa() {
   useEffect(() => {
     supabase
       .from('eventi')
-      .select('*, associazioni(nome, slug)')
+      .select('id, titolo, slug, lat, lng, associazioni(nome, slug)')
+      .not('lat', 'is', null)
       .then(({ data: eventiDB }) => {
         if (!eventiDB) return
         setMarkers(
-          eventiDB
-            .filter((ev) => ev.lat != null && ev.lng != null)
-            .map((ev) => ({
-              id: ev.id,
-              name: ev.titolo,
-              tipo: 'evento',
-              lat: ev.lat,
-              lng: ev.lng,
-            }))
+          eventiDB.map((ev) => ({
+            id: ev.id,
+            name: ev.titolo,
+            tipo: 'evento',
+            lat: ev.lat,
+            lng: ev.lng,
+            slug: ev.slug,
+          }))
         )
       })
   }, [])
@@ -52,7 +52,7 @@ export default function Mappa() {
         ))}
       </nav>
       <div style={{ flex: 1, position: 'relative', minHeight: 0 }}>
-        <MapboxWrapper center={[15.517, 41.507]} zoom={13} markers={markers} />
+        <MapboxWrapper center={[-3.7038, 40.4168]} zoom={5} markers={markers} />
       </div>
     </div>
   )
