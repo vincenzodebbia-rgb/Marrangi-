@@ -65,7 +65,7 @@ export default function Accesso() {
     })
     setLoading(false)
     if (error) { setErrore(error.message); return }
-    router.push(TIPO_ROUTE[tipo])
+    router.push(tipo === 'Associazione' ? '/dashboard' : TIPO_ROUTE[tipo])
   }
 
   return (
