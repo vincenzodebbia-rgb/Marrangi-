@@ -1,18 +1,34 @@
 'use client'
+import { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
+import { supabase } from '@/lib/supabase'
 
 const MapboxWrapper = dynamic(() => import('@/components/MapboxWrapper'), { ssr: false })
 
-const MARKERS = [
-  { id: 1, name: 'Associazione Culturale Daunos', tipo: 'associazione', lng: 15.521, lat: 41.509 },
-  { id: 2, name: 'Festival del Tavoliere',         tipo: 'evento',        lng: 15.512, lat: 41.503 },
-  { id: 3, name: 'Circolo ArCe',                   tipo: 'associazione', lng: 15.525, lat: 41.512 },
-  { id: 4, name: 'Notte Bianca Lucera',             tipo: 'evento',        lng: 15.508, lat: 41.499 },
-  { id: 5, name: 'Teatro dei Senza Tetto',          tipo: 'associazione', lng: 15.518, lat: 41.514 },
-]
-
 export default function Mappa() {
+  const [markers, setMarkers] = useState([])
+
+  useEffect(() => {
+    supabase
+      .from('eventi')
+      .select('*, associazioni(nome, slug)')
+      .then(({ data: eventiDB }) => {
+        if (!eventiDB) return
+        setMarkers(
+          eventiDB
+            .filter((ev) => ev.lat != null && ev.lng != null)
+            .map((ev) => ({
+              id: ev.id,
+              name: ev.titolo,
+              tipo: 'evento',
+              lat: ev.lat,
+              lng: ev.lng,
+            }))
+        )
+      })
+  }, [])
+
   return (
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
       <nav style={{
@@ -36,7 +52,7 @@ export default function Mappa() {
         ))}
       </nav>
       <div style={{ flex: 1, position: 'relative', minHeight: 0 }}>
-        <MapboxWrapper center={[15.517, 41.507]} zoom={13} markers={MARKERS} />
+        <MapboxWrapper center={[15.517, 41.507]} zoom={13} markers={markers} />
       </div>
     </div>
   )

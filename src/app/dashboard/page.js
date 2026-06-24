@@ -29,6 +29,9 @@ export default function Dashboard() {
   const [data, setData] = useState('')
   const [ora, setOra] = useState('')
   const [indirizzo, setIndirizzo] = useState('')
+  const [lat, setLat] = useState(null)
+  const [lng, setLng] = useState(null)
+  const [geocodeHint, setGeocodeHint] = useState('')
 
   const caricaEventi = async (assId) => {
     const { data: rows } = await supabase.from('eventi').select().eq('associazione_id', assId)
@@ -54,6 +57,23 @@ export default function Dashboard() {
       setLoading(false)
     })
   }, [router])
+
+  const geocode = async () => {
+    if (!indirizzo) return
+    const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(indirizzo)}.json?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}&limit=1`
+    const res = await fetch(url)
+    const json = await res.json()
+    const feature = json.features?.[0]
+    if (feature) {
+      setLng(feature.center[0])
+      setLat(feature.center[1])
+      setGeocodeHint(`📍 ${feature.place_name}`)
+    } else {
+      setLat(null)
+      setLng(null)
+      setGeocodeHint('Indirizzo non trovato')
+    }
+  }
 
   const signOut = async () => {
     await supabase.auth.signOut()
@@ -89,6 +109,8 @@ export default function Dashboard() {
       luogo: indirizzo,
       slug: titolo.toLowerCase().replace(/\s+/g, '-'),
       associazione_id: ass.id,
+      lat,
+      lng,
     })
     if (errEv) { setErrore(errEv.message); return }
 
@@ -97,6 +119,9 @@ export default function Dashboard() {
     setData('')
     setOra('')
     setIndirizzo('')
+    setLat(null)
+    setLng(null)
+    setGeocodeHint('')
     setSezione('eventi')
   }
 
@@ -217,7 +242,27 @@ export default function Dashboard() {
               <input type="text" placeholder="Titolo" value={titolo} onChange={(e) => setTitolo(e.target.value)} required style={inputStyle} />
               <input type="date" value={data} onChange={(e) => setData(e.target.value)} required style={inputStyle} />
               <input type="time" value={ora} onChange={(e) => setOra(e.target.value)} required style={inputStyle} />
-              <input type="text" placeholder="Indirizzo" value={indirizzo} onChange={(e) => setIndirizzo(e.target.value)} required style={inputStyle} />
+              <div>
+                <input
+                  type="text"
+                  placeholder="Indirizzo"
+                  value={indirizzo}
+                  onChange={(e) => { setIndirizzo(e.target.value); setGeocodeHint('') }}
+                  onBlur={geocode}
+                  required
+                  style={inputStyle}
+                />
+                {geocodeHint && (
+                  <p style={{
+                    margin: '0.3rem 0 0',
+                    fontSize: '0.75rem',
+                    color: geocodeHint.startsWith('📍') ? 'rgba(242,231,211,0.6)' : '#f87171',
+                    fontFamily: 'var(--font-grotesk)',
+                  }}>
+                    {geocodeHint}
+                  </p>
+                )}
+              </div>
               {errore && <p style={{ color: '#f87171', fontSize: '0.8rem', margin: 0 }}>{errore}</p>}
               <button
                 type="submit"
