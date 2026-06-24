@@ -1,38 +1,24 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { createClient } from '@supabase/supabase-js'
 
-const associazioni = [
-  {
-    slug: 'officina-creativa',
-    nome: 'Officina Creativa',
-    città: 'Lucera',
-    descrizione: 'Spazio culturale indipendente nel centro storico. Laboratori, residenze artistiche e concerti dal vivo ogni weekend.',
-    eventi: [],
-  },
-  {
-    slug: 'teatro-del-popolo',
-    nome: 'Teatro del Popolo',
-    città: 'Lucera',
-    descrizione: 'Associazione teatrale fondata nel 1987. Produzioni originali, rassegne e corsi di recitazione per tutte le età.',
-    eventi: [],
-  },
-  {
-    slug: 'suoni-dal-basso',
-    nome: 'Suoni dal Basso',
-    città: 'Foggia',
-    descrizione: 'Collettivo musicale che promuove artisti emergenti del Sud Italia attraverso showcase, festival e pubblicazioni indipendenti.',
-    eventi: [],
-  },
-]
+function getClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  )
+}
 
 export async function generateMetadata({ params }) {
-  const a = associazioni.find((x) => x.slug === params.slug)
+  const { slug } = await params
+  const { data: a } = await getClient().from('associazioni').select('nome, descrizione').eq('slug', slug).single()
   if (!a) return {}
   return { title: `${a.nome} — Marrangió`, description: a.descrizione }
 }
 
-export default function AssociazionePage({ params }) {
-  const a = associazioni.find((x) => x.slug === params.slug)
+export default async function AssociazionePage({ params }) {
+  const { slug } = await params
+  const { data: a } = await getClient().from('associazioni').select('*, eventi(*)').eq('slug', slug).single()
   if (!a) notFound()
 
   return (
@@ -54,17 +40,21 @@ export default function AssociazionePage({ params }) {
           {a.nome}
         </h1>
 
-        <span
-          style={{ fontFamily: 'var(--font-grotesk)', fontSize: '0.8rem', color: '#F2E7D3', opacity: 0.5, display: 'inline-block', marginBottom: '2rem' }}
-        >
-          {a.città}
-        </span>
+        {a.citta && (
+          <span
+            style={{ fontFamily: 'var(--font-grotesk)', fontSize: '0.8rem', color: '#F2E7D3', opacity: 0.5, display: 'inline-block', marginBottom: '2rem' }}
+          >
+            {a.citta}
+          </span>
+        )}
 
-        <p
-          style={{ fontFamily: 'var(--font-grotesk)', fontWeight: 300, lineHeight: 1.8, marginBottom: '3rem' }}
-        >
-          {a.descrizione}
-        </p>
+        {a.descrizione && (
+          <p
+            style={{ fontFamily: 'var(--font-grotesk)', fontWeight: 300, lineHeight: 1.8, marginBottom: '3rem' }}
+          >
+            {a.descrizione}
+          </p>
+        )}
 
         <section>
           <h2
@@ -72,14 +62,22 @@ export default function AssociazionePage({ params }) {
           >
             Prossimi eventi
           </h2>
-          {a.eventi.length === 0 ? (
+          {!a.eventi || a.eventi.length === 0 ? (
             <p style={{ fontFamily: 'var(--font-grotesk)', fontWeight: 300, opacity: 0.4, fontSize: '0.9rem' }}>
               Nessun evento in programma
             </p>
           ) : (
-            <ul>
+            <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               {a.eventi.map((ev) => (
-                <li key={ev.slug}>{ev.titolo}</li>
+                <li key={ev.id}>
+                  <Link
+                    href={`/eventi/${ev.slug}`}
+                    style={{ fontFamily: 'var(--font-grotesk)', color: '#F2E7D3', textDecoration: 'none', fontSize: '0.95rem' }}
+                  >
+                    {ev.titolo}
+                    {ev.data && <span style={{ opacity: 0.5, marginLeft: '0.75rem', fontSize: '0.8rem' }}>{ev.data}</span>}
+                  </Link>
+                </li>
               ))}
             </ul>
           )}

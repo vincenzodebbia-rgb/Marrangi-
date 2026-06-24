@@ -1,44 +1,24 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { createClient } from '@supabase/supabase-js'
 
-const eventi = [
-  {
-    slug: 'concerto-aperto-maggio',
-    titolo: 'Concerto Aperto — Maggio in Piazza',
-    data: '24 maggio 2025',
-    ora: '21:00',
-    luogo: 'Piazza del Duomo, Lucera',
-    associazione: 'Officina Creativa',
-    associazione_slug: 'officina-creativa',
-  },
-  {
-    slug: 'laboratorio-teatro-giugno',
-    titolo: 'Laboratorio di Teatro Fisico',
-    data: '7 giugno 2025',
-    ora: '18:30',
-    luogo: 'Via Roma 14, Lucera',
-    associazione: 'Teatro del Popolo',
-    associazione_slug: 'teatro-del-popolo',
-  },
-  {
-    slug: 'showcase-emergenti-luglio',
-    titolo: 'Showcase Artisti Emergenti',
-    data: '12 luglio 2025',
-    ora: '20:00',
-    luogo: 'Cortile Ariston, Foggia',
-    associazione: 'Suoni dal Basso',
-    associazione_slug: 'suoni-dal-basso',
-  },
-]
-
-export async function generateMetadata({ params }) {
-  const ev = eventi.find((x) => x.slug === params.slug)
-  if (!ev) return {}
-  return { title: `${ev.titolo} — Marrangió`, description: `${ev.luogo} · ${ev.data}` }
+function getClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  )
 }
 
-export default function EventoPage({ params }) {
-  const ev = eventi.find((x) => x.slug === params.slug)
+export async function generateMetadata({ params }) {
+  const { slug } = await params
+  const { data: ev } = await getClient().from('eventi').select('titolo, luogo, data').eq('slug', slug).single()
+  if (!ev) return {}
+  return { title: `${ev.titolo} — Marrangió`, description: `${ev.luogo ?? ''} · ${ev.data ?? ''}` }
+}
+
+export default async function EventoPage({ params }) {
+  const { slug } = await params
+  const { data: ev } = await getClient().from('eventi').select('*, associazioni(nome, slug)').eq('slug', slug).single()
   if (!ev) notFound()
 
   return (
@@ -60,31 +40,37 @@ export default function EventoPage({ params }) {
           {ev.titolo}
         </h1>
 
-        <p
-          style={{ fontFamily: 'var(--font-grotesk)', fontSize: '0.9rem', color: '#F2E7D3', opacity: 0.7, marginBottom: '0.5rem' }}
-        >
-          {ev.data} · {ev.ora}
-        </p>
-
-        <p
-          style={{ fontFamily: 'var(--font-grotesk)', fontSize: '0.9rem', marginBottom: '2.5rem' }}
-        >
-          📍 {ev.luogo}
-        </p>
-
-        <div
-          style={{ borderTop: '1px solid rgba(242,231,211,0.1)', paddingTop: '1.5rem' }}
-        >
-          <p style={{ fontFamily: 'var(--font-grotesk)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.12em', opacity: 0.5, marginBottom: '0.5rem' }}>
-            Organizzato da
-          </p>
-          <Link
-            href={`/associazioni/${ev.associazione_slug}`}
-            style={{ fontFamily: 'var(--font-grotesk)', fontWeight: 700, color: '#E8843C', textDecoration: 'none', fontSize: '1rem' }}
+        {(ev.data || ev.ora) && (
+          <p
+            style={{ fontFamily: 'var(--font-grotesk)', fontSize: '0.9rem', color: '#F2E7D3', opacity: 0.7, marginBottom: '0.5rem' }}
           >
-            {ev.associazione}
-          </Link>
-        </div>
+            {[ev.data, ev.ora].filter(Boolean).join(' · ')}
+          </p>
+        )}
+
+        {ev.luogo && (
+          <p
+            style={{ fontFamily: 'var(--font-grotesk)', fontSize: '0.9rem', marginBottom: '2.5rem' }}
+          >
+            📍 {ev.luogo}
+          </p>
+        )}
+
+        {ev.associazioni && (
+          <div
+            style={{ borderTop: '1px solid rgba(242,231,211,0.1)', paddingTop: '1.5rem' }}
+          >
+            <p style={{ fontFamily: 'var(--font-grotesk)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.12em', opacity: 0.5, marginBottom: '0.5rem' }}>
+              Organizzato da
+            </p>
+            <Link
+              href={`/associazioni/${ev.associazioni.slug}`}
+              style={{ fontFamily: 'var(--font-grotesk)', fontWeight: 700, color: '#E8843C', textDecoration: 'none', fontSize: '1rem' }}
+            >
+              {ev.associazioni.nome}
+            </Link>
+          </div>
+        )}
 
       </div>
     </main>
