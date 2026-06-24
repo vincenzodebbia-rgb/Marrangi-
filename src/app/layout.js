@@ -22,10 +22,16 @@ const spaceGrotesk = Space_Grotesk({
 })
 
 export const metadata = {
-  title: 'Marrangió',
-  description: 'Mappa culturale di Lucera',
+  title: 'Marrangió — La mappa culturale del tuo quartiere',
+  description: 'Scopri associazioni culturali, eventi, spazi e professionisti nella tua città. Niente algoritmi, niente pubblicità.',
   manifest: '/manifest.json',
   themeColor: '#E8843C',
+  openGraph: {
+    title: 'Marrangió',
+    description: 'La mappa culturale del tuo quartiere',
+    url: 'https://marrangio.vercel.app',
+    siteName: 'Marrangió',
+  },
 }
 
 export default function RootLayout({ children }) {
