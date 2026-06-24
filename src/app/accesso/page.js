@@ -33,8 +33,6 @@ const btnPrimary = {
   marginTop: '0.5rem',
 }
 
-const loading_style = { background: '#0a0806', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(242,231,211,0.4)', fontFamily: 'var(--font-grotesk)' }
-
 export default function Accesso() {
   const router = useRouter()
   const [tab, setTab] = useState('accedi')
@@ -44,8 +42,6 @@ export default function Accesso() {
   const [tipo, setTipo] = useState('Utente')
   const [errore, setErrore] = useState('')
   const [loading, setLoading] = useState(false)
-
-  if (!supabase) return <main style={loading_style}>Configurazione in corso...</main>
 
   const accedi = async (e) => {
     e.preventDefault()
