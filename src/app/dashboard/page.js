@@ -25,6 +25,7 @@ export default function Dashboard() {
   const [eventi, setEventi] = useState([])
   const [errore, setErrore] = useState('')
 
+  // crea evento
   const [titolo, setTitolo] = useState('')
   const [data, setData] = useState('')
   const [ora, setOra] = useState('')
@@ -32,6 +33,13 @@ export default function Dashboard() {
   const [lat, setLat] = useState(null)
   const [lng, setLng] = useState(null)
   const [geocodeHint, setGeocodeHint] = useState('')
+
+  // profilo
+  const [nomeAss, setNomeAss] = useState('')
+  const [citta, setCitta] = useState('')
+  const [descrizione, setDescrizione] = useState('')
+  const [emailAss, setEmailAss] = useState('')
+  const [salvato, setSalvato] = useState(false)
 
   const caricaEventi = async (assId) => {
     const { data: rows } = await supabase.from('eventi').select().eq('associazione_id', assId)
@@ -57,6 +65,15 @@ export default function Dashboard() {
       setLoading(false)
     })
   }, [router])
+
+  useEffect(() => {
+    if (associazione) {
+      setNomeAss(associazione.nome ?? '')
+      setCitta(associazione.citta ?? '')
+      setDescrizione(associazione.descrizione ?? '')
+      setEmailAss(associazione.email ?? '')
+    }
+  }, [associazione])
 
   const geocode = async () => {
     if (!indirizzo) return
@@ -125,6 +142,37 @@ export default function Dashboard() {
     setSezione('eventi')
   }
 
+  const salvaProfilo = async (e) => {
+    e.preventDefault()
+    setErrore('')
+    setSalvato(false)
+
+    const { data: { session } } = await supabase.auth.getSession()
+    const user = session?.user
+    if (!user) return
+
+    if (associazione) {
+      const { error } = await supabase
+        .from('associazioni')
+        .update({ nome: nomeAss, citta, descrizione, email: emailAss })
+        .eq('user_id', user.id)
+      if (error) { setErrore(error.message); return }
+      setAssociazione({ ...associazione, nome: nomeAss, citta, descrizione, email: emailAss })
+    } else {
+      const slug = nomeAss.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+      const { data: nuova, error } = await supabase
+        .from('associazioni')
+        .insert({ nome: nomeAss, citta, descrizione, email: emailAss, slug, user_id: user.id })
+        .select()
+        .single()
+      if (error) { setErrore(error.message); return }
+      setAssociazione(nuova)
+    }
+
+    setSalvato(true)
+    setTimeout(() => setSalvato(false), 3000)
+  }
+
   if (loading) return (
     <main style={{ background: '#0a0806', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <span style={{ fontFamily: 'var(--font-grotesk)', color: 'rgba(242,231,211,0.4)' }}>...</span>
@@ -160,10 +208,10 @@ export default function Dashboard() {
         </span>
 
         <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', flex: 1 }}>
-          {[['eventi', 'I miei eventi'], ['crea', 'Crea evento']].map(([key, label]) => (
+          {[['eventi', 'I miei eventi'], ['crea', 'Crea evento'], ['profilo', 'Il mio profilo']].map(([key, label]) => (
             <button
               key={key}
-              onClick={() => setSezione(key)}
+              onClick={() => { setSezione(key); setErrore(''); setSalvato(false) }}
               style={{
                 background: 'none',
                 border: 'none',
@@ -280,6 +328,45 @@ export default function Dashboard() {
                 }}
               >
                 Pubblica
+              </button>
+            </form>
+          </>
+        )}
+
+        {sezione === 'profilo' && (
+          <>
+            <p style={{ fontFamily: 'var(--font-grotesk)', fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.12em', opacity: 0.5, marginBottom: '1.5rem' }}>
+              il mio profilo
+            </p>
+            <form onSubmit={salvaProfilo} style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', maxWidth: '28rem' }}>
+              <input type="text" placeholder="Nome associazione" value={nomeAss} onChange={(e) => setNomeAss(e.target.value)} required style={inputStyle} />
+              <input type="text" placeholder="Città" value={citta} onChange={(e) => setCitta(e.target.value)} style={inputStyle} />
+              <textarea
+                placeholder="Descrizione"
+                value={descrizione}
+                onChange={(e) => setDescrizione(e.target.value)}
+                rows={4}
+                style={{ ...inputStyle, resize: 'vertical' }}
+              />
+              <input type="email" placeholder="Email pubblica" value={emailAss} onChange={(e) => setEmailAss(e.target.value)} style={inputStyle} />
+              {errore && <p style={{ color: '#f87171', fontSize: '0.8rem', margin: 0 }}>{errore}</p>}
+              {salvato && <p style={{ color: '#4ade80', fontSize: '0.85rem', margin: 0, fontFamily: 'var(--font-grotesk)' }}>Salvato!</p>}
+              <button
+                type="submit"
+                style={{
+                  background: '#E8843C',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '0.5rem',
+                  padding: '0.7rem 1rem',
+                  fontFamily: 'var(--font-grotesk)',
+                  fontWeight: 700,
+                  fontSize: '0.9rem',
+                  cursor: 'pointer',
+                  marginTop: '0.25rem',
+                }}
+              >
+                Salva
               </button>
             </form>
           </>
