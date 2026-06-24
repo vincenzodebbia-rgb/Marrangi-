@@ -5,7 +5,13 @@ import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 
 const TIPI = ['Utente', 'Associazione', 'Artista']
-const TIPO_ROUTE = { Utente: '/chi-sei/utente', Associazione: '/chi-sei/associazione', Artista: '/chi-sei/artista' }
+
+const tipoRoute = (t) => {
+  const n = t?.toLowerCase()
+  if (n === 'associazione') return '/dashboard'
+  if (n === 'artista') return '/dashboard/artista'
+  return '/mappa'
+}
 
 const inputStyle = {
   width: '100%',
@@ -50,8 +56,7 @@ export default function Accesso() {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password })
     setLoading(false)
     if (error) { setErrore(error.message); return }
-    const tipo = data.user?.user_metadata?.tipo?.toLowerCase()
-    router.push(tipo === 'associazione' ? '/dashboard' : '/mappa')
+    router.push(tipoRoute(data.user?.user_metadata?.tipo))
   }
 
   const registrati = async (e) => {
@@ -65,7 +70,7 @@ export default function Accesso() {
     })
     setLoading(false)
     if (error) { setErrore(error.message); return }
-    router.push(tipo === 'Associazione' ? '/dashboard' : TIPO_ROUTE[tipo])
+    router.push(tipoRoute(tipo))
   }
 
   return (
