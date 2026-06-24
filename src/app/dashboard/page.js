@@ -4,12 +4,6 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 
-const mockEventi = [
-  { id: 1, titolo: 'Concerto Aperto — Maggio in Piazza', data: '24 mag 2025', stato: 'pubblicato' },
-  { id: 2, titolo: 'Laboratorio Serigrafia', data: '3 giu 2025', stato: 'bozza' },
-  { id: 3, titolo: 'Apertura Estiva Cortile', data: '15 lug 2025', stato: 'pubblicato' },
-]
-
 const inputStyle = {
   width: '100%',
   background: 'rgba(242,231,211,0.05)',
@@ -22,25 +16,41 @@ const inputStyle = {
   outline: 'none',
 }
 
-const cfg_style = { background: '#0a0806', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(242,231,211,0.4)', fontFamily: 'var(--font-grotesk)' }
-
 export default function Dashboard() {
   const router = useRouter()
   const [sezione, setSezione] = useState('eventi')
   const [utente, setUtente] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [associazione, setAssociazione] = useState(null)
+  const [eventi, setEventi] = useState([])
+  const [errore, setErrore] = useState('')
 
-  // form state
   const [titolo, setTitolo] = useState('')
   const [data, setData] = useState('')
   const [ora, setOra] = useState('')
   const [indirizzo, setIndirizzo] = useState('')
 
+  const caricaEventi = async (assId) => {
+    const { data: rows } = await supabase.from('eventi').select().eq('associazione_id', assId)
+    setEventi(rows ?? [])
+  }
+
   useEffect(() => {
-    if (!supabase) { setLoading(false); return }
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       if (!session) { router.replace('/accesso'); return }
       setUtente(session.user)
+
+      const { data: ass } = await supabase
+        .from('associazioni')
+        .select()
+        .eq('user_id', session.user.id)
+        .single()
+
+      if (ass) {
+        setAssociazione(ass)
+        await caricaEventi(ass.id)
+      }
+
       setLoading(false)
     })
   }, [router])
@@ -50,12 +60,45 @@ export default function Dashboard() {
     router.replace('/')
   }
 
-  const pubblica = (e) => {
+  const pubblica = async (e) => {
     e.preventDefault()
-    console.log({ titolo, data, ora, indirizzo })
-  }
+    setErrore('')
 
-  if (!supabase) return <main style={cfg_style}>Configurazione in corso...</main>
+    const { data: { session } } = await supabase.auth.getSession()
+    const user = session?.user
+    if (!user) return
+
+    let ass = associazione
+    if (!ass) {
+      const nome = user.user_metadata?.nome ?? user.email
+      const slug = nome.toLowerCase().replace(/\s+/g, '-')
+      const { data: nuova, error: errAss } = await supabase
+        .from('associazioni')
+        .insert({ user_id: user.id, nome, slug })
+        .select()
+        .single()
+      if (errAss) { setErrore(errAss.message); return }
+      ass = nuova
+      setAssociazione(ass)
+    }
+
+    const { error: errEv } = await supabase.from('eventi').insert({
+      titolo,
+      data,
+      ora,
+      luogo: indirizzo,
+      slug: titolo.toLowerCase().replace(/\s+/g, '-'),
+      associazione_id: ass.id,
+    })
+    if (errEv) { setErrore(errEv.message); return }
+
+    await caricaEventi(ass.id)
+    setTitolo('')
+    setData('')
+    setOra('')
+    setIndirizzo('')
+    setSezione('eventi')
+  }
 
   if (loading) return (
     <main style={{ background: '#0a0806', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -141,19 +184,23 @@ export default function Dashboard() {
             <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: 'var(--font-grotesk)', fontSize: '0.875rem' }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid rgba(242,231,211,0.1)' }}>
-                  {['Titolo', 'Data', 'Stato'].map((h) => (
+                  {['Titolo', 'Data', 'Luogo'].map((h) => (
                     <th key={h} style={{ textAlign: 'left', padding: '0 0 0.75rem', fontWeight: 400, opacity: 0.4, fontSize: '0.75rem' }}>{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
-                {mockEventi.map((ev) => (
+                {eventi.length === 0 ? (
+                  <tr>
+                    <td colSpan={3} style={{ padding: '1.5rem 0', opacity: 0.4, fontFamily: 'var(--font-grotesk)', fontSize: '0.875rem' }}>
+                      Nessun evento ancora.
+                    </td>
+                  </tr>
+                ) : eventi.map((ev) => (
                   <tr key={ev.id} style={{ borderBottom: '1px solid rgba(242,231,211,0.06)' }}>
                     <td style={{ padding: '0.875rem 0' }}>{ev.titolo}</td>
                     <td style={{ padding: '0.875rem 0', opacity: 0.6 }}>{ev.data}</td>
-                    <td style={{ padding: '0.875rem 0', color: ev.stato === 'pubblicato' ? '#2E7D52' : undefined, opacity: ev.stato === 'bozza' ? 0.4 : 1 }}>
-                      {ev.stato}
-                    </td>
+                    <td style={{ padding: '0.875rem 0', opacity: 0.6 }}>{ev.luogo}</td>
                   </tr>
                 ))}
               </tbody>
@@ -171,6 +218,7 @@ export default function Dashboard() {
               <input type="date" value={data} onChange={(e) => setData(e.target.value)} required style={inputStyle} />
               <input type="time" value={ora} onChange={(e) => setOra(e.target.value)} required style={inputStyle} />
               <input type="text" placeholder="Indirizzo" value={indirizzo} onChange={(e) => setIndirizzo(e.target.value)} required style={inputStyle} />
+              {errore && <p style={{ color: '#f87171', fontSize: '0.8rem', margin: 0 }}>{errore}</p>}
               <button
                 type="submit"
                 style={{
