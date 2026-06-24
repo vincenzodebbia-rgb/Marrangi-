@@ -8,6 +8,7 @@ export default async function sitemap() {
 
   const { data: associazioni } = await supabase.from('associazioni').select('slug, created_at')
   const { data: eventi } = await supabase.from('eventi').select('slug, created_at')
+  const { data: artisti } = await supabase.from('artisti').select('slug, created_at')
 
   const staticPages = [
     { url: 'https://marrangio.vercel.app', lastModified: new Date() },
@@ -26,5 +27,10 @@ export default async function sitemap() {
     lastModified: new Date(e.created_at),
   }))
 
-  return [...staticPages, ...assPages, ...evPages]
+  const artPages = (artisti ?? []).map(a => ({
+    url: `https://marrangio.vercel.app/artisti/${a.slug}`,
+    lastModified: new Date(a.created_at),
+  }))
+
+  return [...staticPages, ...assPages, ...evPages, ...artPages]
 }
