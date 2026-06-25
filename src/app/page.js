@@ -39,6 +39,16 @@ export default function Home() {
     ...(clicks > 0 ? { animation: animMap[clicks] } : {}),
   }
 
+  const windStyles = `
+    @keyframes wind1 { 0%,100%{transform:rotate(-3deg) translateY(-6px)} 50%{transform:rotate(3deg) translateY(6px)} }
+    @keyframes wind2 { 0%,100%{transform:rotate(-6deg) translateY(-8px)} 50%{transform:rotate(8deg) translateY(8px)} }
+    @keyframes wind3 { 0%,100%{transform:rotate(-10deg) translateY(-10px)} 50%{transform:rotate(14deg) translateY(10px)} }
+    @keyframes wind4 { 0%,100%{transform:rotate(-15deg) translateY(-12px)} 50%{transform:rotate(20deg) translateY(12px)} }
+    @keyframes flyaway { 0%{transform:rotate(0deg) scale(1) translate(0,0)} 50%{transform:rotate(360deg) scale(0.5) translate(100px,-300px)} 100%{transform:rotate(720deg) scale(0) translate(200px,-600px)} }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+    .animate-float { animation: float 3s ease-in-out infinite; }
+  `
+
   return (
     <main
       className="relative min-h-screen flex flex-col items-center justify-center transition-all duration-700"
@@ -48,13 +58,7 @@ export default function Home() {
           : 'var(--nero)',
       }}
     >
-      <style>{`
-        @keyframes wind1 { 0%,100%{transform:rotate(-3deg)} 50%{transform:rotate(3deg)} }
-        @keyframes wind2 { 0%,100%{transform:rotate(-6deg)} 50%{transform:rotate(8deg)} }
-        @keyframes wind3 { 0%,100%{transform:rotate(-10deg)} 50%{transform:rotate(14deg)} }
-        @keyframes wind4 { 0%,100%{transform:rotate(-15deg)} 50%{transform:rotate(20deg)} }
-        @keyframes flyaway { 0%{transform:rotate(20deg) scale(1) translate(0,0)} 100%{transform:rotate(720deg) scale(0.2) translate(200px,-500px)} }
-      `}</style>
+      <style dangerouslySetInnerHTML={{__html: windStyles}} />
 
       <button
         onClick={handleUmbrellaClick}
