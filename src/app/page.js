@@ -1,13 +1,44 @@
 'use client'
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 
 export default function Home() {
+  const router = useRouter()
   const [isDay, setIsDay] = useState(false)
   const [mounted, setMounted] = useState(false)
+  const [clicks, setClicks] = useState(0)
+
   useEffect(() => setMounted(true), [])
   if (!mounted) return null
+
+  const handleUmbrellaClick = () => {
+    setIsDay(d => !d)
+    setClicks(prev => {
+      const next = prev + 1
+      if (next >= 5) {
+        setTimeout(() => router.push('/storia'), 1000)
+        return 5
+      }
+      return next
+    })
+  }
+
+  const animMap = {
+    1: 'wind1 2s ease-in-out infinite',
+    2: 'wind2 1.5s ease-in-out infinite',
+    3: 'wind3 1s ease-in-out infinite',
+    4: 'wind4 0.6s ease-in-out infinite',
+    5: 'flyaway 1s forwards',
+  }
+
+  const umbrellaStyle = {
+    height: '180px',
+    width: 'auto',
+    transformOrigin: 'bottom center',
+    ...(clicks > 0 ? { animation: animMap[clicks] } : {}),
+  }
 
   return (
     <main
@@ -18,8 +49,16 @@ export default function Home() {
           : 'var(--nero)',
       }}
     >
+      <style>{`
+        @keyframes wind1 { 0%,100%{transform:rotate(-3deg)} 50%{transform:rotate(3deg)} }
+        @keyframes wind2 { 0%,100%{transform:rotate(-6deg)} 50%{transform:rotate(8deg)} }
+        @keyframes wind3 { 0%,100%{transform:rotate(-10deg)} 50%{transform:rotate(14deg)} }
+        @keyframes wind4 { 0%,100%{transform:rotate(-15deg)} 50%{transform:rotate(20deg)} }
+        @keyframes flyaway { 0%{transform:rotate(20deg) scale(1) translate(0,0)} 100%{transform:rotate(720deg) scale(0.2) translate(200px,-500px)} }
+      `}</style>
+
       <button
-        onClick={() => setIsDay(!isDay)}
+        onClick={handleUmbrellaClick}
         className="cursor-pointer focus:outline-none"
         aria-label="Cambia modalità"
       >
@@ -28,8 +67,8 @@ export default function Home() {
           alt="Marrangio"
           height={180}
           width={180}
-          className="animate-float object-contain"
-          style={{ height: '180px', width: 'auto' }}
+          className={clicks === 0 ? 'animate-float object-contain' : 'object-contain'}
+          style={umbrellaStyle}
           priority
         />
       </button>
