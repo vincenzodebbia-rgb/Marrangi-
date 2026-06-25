@@ -14,7 +14,6 @@ export default function Home() {
   if (!mounted) return null
 
   const handleUmbrellaClick = () => {
-    setIsDay(d => !d)
     setClicks(prev => {
       const next = prev + 1
       if (next >= 5) {
@@ -96,6 +95,15 @@ export default function Home() {
       >
         sei un&apos;associazione?
       </Link>
+
+      <button
+        onClick={() => setIsDay(d => !d)}
+        className="absolute top-5 right-5 focus:outline-none transition-opacity duration-300"
+        style={{ opacity: 0.45, fontSize: '1.25rem', background: 'none', border: 'none', cursor: 'pointer' }}
+        aria-label="Cambia modalità giorno/notte"
+      >
+        {isDay ? '☀' : '☽'}
+      </button>
     </main>
   )
 }
