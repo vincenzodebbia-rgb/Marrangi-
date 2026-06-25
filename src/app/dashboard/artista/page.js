@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 
 const DISCIPLINE = ['Teatro', 'Musica', 'Danza', 'Arti visive', 'Altro']
-const CERCO = ['Collaborazioni', 'Spazi', 'Progetti']
+const CERCA = ['Collaborazioni', 'Spazi', 'Progetti']
 
 const inputStyle = {
   width: '100%',
@@ -32,7 +32,7 @@ export default function DashboardArtista() {
   const [disciplina, setDisciplina] = useState('')
   const [citta, setCitta] = useState('')
   const [bio, setBio] = useState('')
-  const [cerco, setCerco] = useState([])
+  const [cerca, setCerca] = useState([])
   const [emailPub, setEmailPub] = useState('')
 
   useEffect(() => {
@@ -57,13 +57,13 @@ export default function DashboardArtista() {
       setDisciplina(artista.disciplina ?? '')
       setCitta(artista.citta ?? '')
       setBio(artista.bio ?? '')
-      setCerco(artista.cerco ?? [])
+      setCerca(artista.cerca ?? [])
       setEmailPub(artista.email ?? '')
     }
   }, [artista])
 
-  const toggleCerco = (v) =>
-    setCerco((prev) => prev.includes(v) ? prev.filter((x) => x !== v) : [...prev, v])
+  const toggleCerca = (v) =>
+    setCerca((prev) => prev.includes(v) ? prev.filter((x) => x !== v) : [...prev, v])
 
   const salva = async (e) => {
     e.preventDefault()
@@ -74,7 +74,7 @@ export default function DashboardArtista() {
     const user = session?.user
     if (!user) return
 
-    const payload = { nome, disciplina, citta, bio, cerco, email: emailPub }
+    const payload = { nome, disciplina, citta, bio, cerca, email: emailPub }
 
     if (artista) {
       const { error } = await supabase.from('artisti').update(payload).eq('user_id', user.id)
@@ -218,19 +218,19 @@ export default function DashboardArtista() {
               />
 
               <div>
-                <p style={{ fontFamily: 'var(--font-grotesk)', fontSize: '0.75rem', opacity: 0.5, marginBottom: '0.5rem' }}>Cosa cerco</p>
+                <p style={{ fontFamily: 'var(--font-grotesk)', fontSize: '0.75rem', opacity: 0.5, marginBottom: '0.5rem' }}>Cosa cerca</p>
                 <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
-                  {CERCO.map((v) => (
+                  {CERCA.map((v) => (
                     <button
                       key={v}
                       type="button"
-                      onClick={() => toggleCerco(v)}
+                      onClick={() => toggleCerca(v)}
                       style={{
                         padding: '0.35rem 0.75rem',
                         borderRadius: '2rem',
-                        border: `1px solid ${cerco.includes(v) ? '#E8843C' : 'rgba(255,255,255,0.2)'}`,
-                        background: cerco.includes(v) ? 'rgba(232,132,60,0.15)' : 'transparent',
-                        color: cerco.includes(v) ? '#E8843C' : '#F2E7D3',
+                        border: `1px solid ${cerca.includes(v) ? '#E8843C' : 'rgba(255,255,255,0.2)'}`,
+                        background: cerca.includes(v) ? 'rgba(232,132,60,0.15)' : 'transparent',
+                        color: cerca.includes(v) ? '#E8843C' : '#F2E7D3',
                         fontFamily: 'var(--font-grotesk)',
                         fontSize: '0.8rem',
                         cursor: 'pointer',
